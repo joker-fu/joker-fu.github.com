@@ -1,5 +1,5 @@
 
-#### 分支说明
+#### 分支说明（切记这两个分支不能merge rebase）
 	master：博客文章发布分支
 	hexo: hexo备份分支
 
