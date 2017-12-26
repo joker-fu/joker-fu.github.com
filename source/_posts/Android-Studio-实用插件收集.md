@@ -31,6 +31,6 @@ tags: Android Studio
 
 13 [CodeGlance](https://plugins.jetbrains.com/plugin/7275-codeglance)：预览代码，实现快速定位
 
-14 [android-strings-search-plugin]([https://github.com/konifar/android-strings-search-plugin](https://github.com/konifar/android-strings-search-plugin))：通过输入文字找到strings.xml资源
+14 [android-strings-search-plugin]([https://github.com/konifar/android-strings-search-plugin](https://github.com/konifar/android-strings-search-plugin)：通过输入文字找到strings.xml资源
 
 15[Alibaba Java Coding Guidelines](https://github.com/alibaba/p3c): 阿里巴巴规约插件 【强烈推荐】
