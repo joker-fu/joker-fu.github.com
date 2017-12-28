@@ -5,7 +5,7 @@
 
 #### 使用说明
 	- 1 搭建hexo环境
-	- 2 拉取master分支
+	- 2 不需要init -> nmp install
 	- 3 拉去hexo分支
 	
 #### 博客发布与分支push
