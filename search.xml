@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[win10 小箭头去除与恢复]]></title>
+    <url>%2F2018%2F01%2F02%2Fwin10-%E5%B0%8F%E7%AE%AD%E5%A4%B4%E5%8E%BB%E9%99%A4%E4%B8%8E%E6%81%A2%E5%A4%8D%2F</url>
+    <content type="text"><![CDATA[1.去掉小箭头123456reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /d "%systemroot%\system32\imageres.dll,197" /t reg_sz /ftaskkill /f /im explorer.exeattrib -s -r -h "%userprofile%\AppData\Local\iconcache.db"del "%userprofile%\AppData\Local\iconcache.db" /f /qstart explorerpause 复制上面的代码，新建一个txt文件，粘贴后另存为.bat文件，然后以管理员身份打开。 2.恢复小箭头123456reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v 29 /ftaskkill /f /im explorer.exeattrib -s -r -h "%userprofile%\AppData\Local\iconcache.db"del "%userprofile%\AppData\Local\iconcache.db" /f /qstart explorerpause 同理，复制上面的代码，新建一个txt文件，粘贴后另存为.bat文件，然后以管理员身份打开。]]></content>
+      <categories>
+        <category>tool</category>
+      </categories>
+      <tags>
+        <tag>tool</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Android 平台版本支持的 API 级别 设备指数查看]]></title>
     <url>%2F2017%2F12%2F28%2FAndroid-%E5%B9%B3%E5%8F%B0%E7%89%88%E6%9C%AC%E6%94%AF%E6%8C%81%E7%9A%84-API-%E7%BA%A7%E5%88%AB-%E8%AE%BE%E5%A4%87%E6%8C%87%E6%95%B0%E6%9F%A5%E7%9C%8B%2F</url>
     <content type="text"><![CDATA[平台版本 API VERSION_CODE 备注 Android 7.0 24 N 平台亮点 Android 6.0 23 M 平台亮点 Android 5.1 22 LOLLIPOP_MR1 平台亮点 Android 5.0 21 LOLLIPOP Android 4.4W 20 KITKAT_WATCH 仅限 KitKat for Wearables Android 4.4 19 KITKAT 平台亮点 Android 4.3 18 JELLY_BEAN_MR2 平台亮点 Android 4.2、4.2.2 17 JELLY_BEAN_MR1 平台亮点 Android 4.1、4.1.1 16 JELLY_BEAN 平台亮点 Android 4.0.3、4.0.4 15 ICE_CREAM_SANDWICH_MR1 平台亮点 Android 4.0、4.0.1、4.0.2 14 ICE_CREAM_SANDWICH Android 3.2 13 HONEYCOMB_MR2 Android 3.1.x 12 HONEYCOMB_MR1 平台亮点 Android 3.0.x 11 HONEYCOMB 平台亮点 Android 2.3.4Android 2.3.3 10 GINGERBREAD_MR1 平台亮点 Android 2.3.2Android 2.3.1Android 2.3 9 GINGERBREAD Android 2.2.x 8 FROYO 平台亮点 Android 2.1.x 7 ECLAIR_MR1 平台亮点 Android 2.0.1 6 ECLAIR_0_1 Android 2.0 5 ECLAIR Android 1.6 4 DONUT 平台亮点 Android 1.5 3 CUPCAKE 平台亮点 Android 1.1 2 BASE_1_1 Android 1.0 1 BASE 附属: 官网最新对应关系查看 官方有关运行各版本的设备的相对数量的信息查看 友盟全域罗盘设备指数查看 腾讯移动分析查看]]></content>
@@ -42,7 +53,7 @@
   <entry>
     <title><![CDATA[Android Studio 实用插件收集]]></title>
     <url>%2F2017%2F12%2F26%2FAndroid-Studio-%E5%AE%9E%E7%94%A8%E6%8F%92%E4%BB%B6%E6%94%B6%E9%9B%86%2F</url>
-    <content type="text"><![CDATA[1 Material Theme UI EAP 、Material Theme UI ：Android Studio界面设计为Material Design风格 2 Android Wifi ADB 、ADB Wifi：连接一次后 就可以使用WiFi连接手机 3 Gson Format：快速转换json 【强烈推荐】 4 Android Parcelable Code Generator： JavaBean序列化，快速实现Parcelable接口 【强烈推荐】 5 ButterKnife Zelezny：ButterKnife 注解生成器 6 ECTranslation：Android Studio 翻译插件 7 checkstyle-idea：检查代码风格 8 FindBugs-IDEA：帮你找到隐藏的bug及不好的做法 9 Android Material Design Icon Generator：生成Material Design Icon 10 SelectorChapek for Android：Selector文件生成 11 .ignore : git忽略文件插件 12 Lifecycle Sorter : Activity或者fragment的生命周期排序 13 CodeGlance：预览代码，实现快速定位 14 android-strings-search-plugin：通过输入文字找到strings.xml资源 15Alibaba Java Coding Guidelines: 阿里巴巴规约插件 【强烈推荐】]]></content>
+    <content type="text"><![CDATA[1 Material Theme UI EAP 、Material Theme UI ：Android Studio界面设计为Material Design风格 2 Android Wifi ADB：连接一次后 就可以使用WiFi连接手机 3 Gson Format：快速转换json 【强烈推荐】 4 Android Parcelable Code Generator： JavaBean序列化，快速实现Parcelable接口 【强烈推荐】 5 ButterKnife Zelezny：ButterKnife 注解生成器 6 ECTranslation：Android Studio 翻译插件 7 checkstyle-idea：检查代码风格 8 FindBugs-IDEA：帮你找到隐藏的bug及不好的做法 9 Android Material Design Icon Generator：生成Material Design Icon 10 SelectorChapek for Android：Selector文件生成 11 .ignore : git忽略文件插件 12 Lifecycle Sorter : Activity或者fragment的生命周期排序 13 CodeGlance：预览代码，实现快速定位 14 android-strings-search-plugin：通过输入文字找到strings.xml资源 15Alibaba Java Coding Guidelines: 阿里巴巴规约插件 【强烈推荐】]]></content>
       <categories>
         <category>Android Studio</category>
       </categories>
