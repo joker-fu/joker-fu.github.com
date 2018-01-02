@@ -7,7 +7,7 @@ tags: Android Studio
 ---
 1 [Material Theme UI EAP](https://github.com/equinusocio/material-theme) 、[Material Theme UI](https://plugins.jetbrains.com/plugin/8006-material-theme-ui) ：Android Studio界面设计为Material Design风格
 
-2 [Android Wifi ADB](https://github.com/pedrovgs/AndroidWiFiADB) 、[ADB Wifi]( https://github.com/layerlre/ADBWIFI)：连接一次后 就可以使用WiFi连接手机 
+2 [Android Wifi ADB](https://github.com/pedrovgs/AndroidWiFiADB)：连接一次后 就可以使用WiFi连接手机 
 
 3 [Gson Format](https://plugins.jetbrains.com/plugin/7654-gsonformat)：快速转换json 【强烈推荐】
 
