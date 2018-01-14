@@ -2,8 +2,8 @@
 title: Android 平台版本支持的 API 级别 设备指数查看
 copyright: true
 date: 2017-12-28 21:31:39
-categories:
-tags:
+categories: Android
+tags: Android
 ---
 | 平台版本 | API  | VERSION_CODE | 备注 |
 |:--|:--|:--|:--|
