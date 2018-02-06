@@ -1,1 +1,1270 @@
-<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3"><link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222"><meta name="keywords" content="Android,自定义控件,"><meta name="description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自"><meta name="keywords" content="Android,自定义控件"><meta property="og:type" content="article"><meta property="og:title" content="Android 自定义CircleImageView"><meta property="og:url" content="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/index.html"><meta property="og:site_name" content="博格"><meta property="og:description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png"><meta property="og:updated_time" content="2018-01-05T08:51:18.608Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android 自定义CircleImageView"><meta name="twitter:description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自"><meta name="twitter:image" content="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.3",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!0,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/"><title>Android 自定义CircleImageView | 博格</title><script type="text/javascript" src="/js/src/love.js"></script></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">博格</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Joker Fu"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.gif"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="博格"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android 自定义CircleImageView</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-05T15:43:03+08:00">2018-01-05</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span> ， <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/自定义控件/" itemprop="url" rel="index"><span itemprop="name">自定义控件</span></a></span></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 热度<span class="busuanzi-value" id="busuanzi_value_page_pv"></span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">2,840字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">14分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:</p><p><img src="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png" alt="我是效果图"></p><p>看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。</p><p>接下来 嗯 嗯 啊 啊 啊……</p><p>嗯 得先来个说明</p><p>本文标题说的是自定义CircleImageView，但是我们实际干的却是圆形 还有圆角矩形。所以我们就不叫CircleImageView，且叫它ShapeImageView，虽然只有两种形状。觉得不合适的可随意修改嘛…</p><p>然后我们得知道自定义控件的四步曲：<br>1、自定义View的属性<br>2、在View的构造方法中获得我们自定义的属性<br>3、重写onMeasure<br>4、重写onDraw</p><p>接下来就正式开干……</p><h4 id="一-自定义属性"><a href="#一-自定义属性" class="headerlink" title="一 自定义属性"></a>一 自定义属性</h4><p>为了感觉高大上，我们的自定义控件还是配上几个自定义属性才像话嘛！！！总共定义了6个自定义属性，分别是边框宽、边框颜色、边框重叠、填充颜色、圆角半径、形状类型。<br></p><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;declare-styleable <span class="built_in">name</span>=<span class="string">"ShapeImageView"</span>&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_width"</span> <span class="built_in">format</span>=<span class="string">"dimension"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_color"</span> <span class="built_in">format</span>=<span class="string">"color"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_overlay"</span> <span class="built_in">format</span>=<span class="string">"boolean"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_fill_color"</span> <span class="built_in">format</span>=<span class="string">"color"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_round_radius"</span> <span class="built_in">format</span>=<span class="string">"dimension"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_shape_type"</span>&gt;</span><br><span class="line">        &lt;enum <span class="built_in">name</span>=<span class="string">"circle"</span> value=<span class="string">"0"</span>/&gt;</span><br><span class="line">        &lt;enum <span class="built_in">name</span>=<span class="string">"round"</span> value=<span class="string">"1"</span>/&gt;</span><br><span class="line">    &lt;/attr&gt;</span><br><span class="line">&lt;/declare-styleable&gt;</span><br></pre></td></tr></table></figure><p></p><h4 id="二-获取自定义属性"><a href="#二-获取自定义属性" class="headerlink" title="二 获取自定义属性"></a>二 获取自定义属性</h4><p>这里得分两步，这第一步就得是继承自我们的ImageView，并重写他的构造方法：<br></p><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这里我们让一个、两个参数的构造方法都去调用三个参数的构造方法</span></span><br><span class="line"><span class="selector-tag">public</span> <span class="selector-tag">class</span> <span class="selector-tag">ShapeImageView</span> <span class="selector-tag">extends</span> <span class="selector-tag">ImageView</span> &#123;</span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context) &#123;</span><br><span class="line">        <span class="selector-tag">this</span>(context, null); </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context, <span class="variable">@Nullable</span> AttributeSet attrs) &#123;</span><br><span class="line">        <span class="selector-tag">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context, <span class="variable">@Nullable</span> AttributeSet attrs, int defStyleAttr) &#123;</span><br><span class="line">        <span class="selector-tag">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>没错，这第二步就是获取自定义属性了，因为我们都统一调用的三个参数的构造方法，所以直接在三个参数的构造方法中获取属性：<br></p><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">ShapeImageView(Context </span><span class="built_in">context</span>, AttributeSet attrs, int defStyleAttr) &#123;</span><br><span class="line">    super(<span class="built_in">context</span>, attrs, defStyleAttr)<span class="comment">;</span></span><br><span class="line">    TypedArray a = <span class="built_in">context</span>.obtainStyledAttributes(attrs, R.styleable.<span class="keyword">ShapeImageView, </span>defStyleAttr, <span class="number">0</span>)<span class="comment">;</span></span><br><span class="line">    mBorderWidth = a.getDimensionPixelSize(R.styleable.<span class="keyword">ShapeImageView_siv_border_width, </span>DEFAULT_BORDER_WIDTH)<span class="comment">;</span></span><br><span class="line">    mBorderColor = a.getColor(R.styleable.<span class="keyword">ShapeImageView_siv_border_color, </span>DEFAULT_BORDER_COLOR)<span class="comment">;</span></span><br><span class="line">    mFillColor = a.getColor(R.styleable.<span class="keyword">ShapeImageView_siv_fill_color, </span>DEFAULT_FILL_COLOR)<span class="comment">;</span></span><br><span class="line">    mBorderOverlay = a.getBoolean(R.styleable.<span class="keyword">ShapeImageView_siv_border_overlay, </span>DEFAULT_BORDER_OVERLAY)<span class="comment">;</span></span><br><span class="line">    mShapeType = a.getInt(R.styleable.<span class="keyword">ShapeImageView_siv_shape_type, </span><span class="keyword">SHAPE_CIRCLE);</span></span><br><span class="line"><span class="keyword"> </span>   mRoundRadius = a.getDimensionPixelSize(R.styleable.<span class="keyword">ShapeImageView_siv_round_radius, </span>DEFAULT_ROUND_RADIUS)<span class="comment">;</span></span><br><span class="line">    a.recycle()<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>这里没什么好说的，就是把我们刚才的6个自定义属性值获取出来了，没有值的都赋上默认值。记得最后调用下recycle()，就行了。</p><h4 id="三-ShapeImageView之onMeasure"><a href="#三-ShapeImageView之onMeasure" class="headerlink" title="三 ShapeImageView之onMeasure"></a>三 ShapeImageView之onMeasure</h4><p>我们这里是继承自ImageView，所以测量的事情就让ImageView去祸祸，这一步我们就这么愉快的完成了。</p><h4 id="四-ShapeImageView之onDraw"><a href="#四-ShapeImageView之onDraw" class="headerlink" title="四 ShapeImageView之onDraw"></a>四 ShapeImageView之onDraw</h4><p>这一步是最关键的一步了，也是我们的最后一步，完成它就可以看到最终的效果图了。接下来我们就需要把这一步细分成几小步来完成：</p><ul><li><p>获取要绘制的Bitmap</p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从Drawable中取出Bitmap </span></span><br><span class="line"><span class="keyword">private</span> Bitmap getBitmapFormDrawable() &#123;</span><br><span class="line">    Drawable drawable = getDrawable();</span><br><span class="line">    <span class="keyword">if</span> (drawable == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//是BitmapDrawable直接取出Bitmap </span></span><br><span class="line">    <span class="keyword">if</span> (drawable <span class="keyword">instanceof</span> BitmapDrawable) &#123;</span><br><span class="line">        <span class="keyword">return</span> ((BitmapDrawable) drawable).getBitmap();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//这里需要对DEFAULT_DRAWABLE_DIMENSION说明：在ColorDrawable中getIntrinsicWidth为-1，所以给了个默认值2</span></span><br><span class="line">        <span class="keyword">int</span> dWidth = drawable.getIntrinsicWidth() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicWidth();</span><br><span class="line">        <span class="keyword">int</span> dHeight = drawable.getIntrinsicHeight() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicHeight(); </span><br><span class="line">        <span class="comment">//创建Bitmap画布，并绘制出来</span></span><br><span class="line">        Bitmap bitmap = Bitmap.createBitmap(dWidth, dHeight, BITMAP_CONFIG);</span><br><span class="line">        Canvas canvas = <span class="keyword">new</span> Canvas(bitmap);</span><br><span class="line">        drawable.setBounds(<span class="number">0</span>, <span class="number">0</span>, canvas.getWidth(), canvas.getHeight());</span><br><span class="line">        drawable.draw(canvas);</span><br><span class="line">        <span class="keyword">return</span> bitmap;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>更新设置<br>这里需要简单介绍下BitmapShader:</p><blockquote><p>BitmapShader，顾名思义，就是用Bitmap对绘制的图形进行渲染着色，其实就是用图片对图形进行贴图。<br>BitmapShader构造函数如下所示：<br>BitmapShader(Bitmap bitmap, Shader.TileMode tileX, Shader.TileMode tileY)<br>第一个参数是Bitmap对象，该Bitmap决定了用什么图片对绘制的图形进行贴图。<br>第二个参数和第三个参数都是Shader.TileMode类型的枚举值，有以下三个取值：CLAMP(拉伸) 、REPEAT(重复) 和 MIRROR(镜像)。</p></blockquote></li></ul><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> updateSetup() &#123;</span><br><span class="line">    <span class="keyword">if</span> (mWidth == <span class="number">0</span> &amp;&amp; mHeight == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.invalidate();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置BitmapShader  使用拉伸模式</span></span><br><span class="line">    BitmapShader bitmapShader = <span class="keyword">new</span> BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line">    <span class="comment">//设置BitmapPaint</span></span><br><span class="line">    mBitmapPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mBitmapPaint.setShader(bitmapShader);</span><br><span class="line">    <span class="comment">//设置BorderPaint</span></span><br><span class="line">    mBorderPaint.setStyle(Paint.Style.STROKE);</span><br><span class="line">    mBorderPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mBorderPaint.setColor(mBorderColor);</span><br><span class="line">    mBorderPaint.setStrokeWidth(mBorderWidth);</span><br><span class="line">    <span class="comment">//设置FillPaint</span></span><br><span class="line">    mFillPaint.setStyle(Paint.Style.FILL);</span><br><span class="line">    mFillPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mFillPaint.setColor(mFillColor);</span><br><span class="line">    <span class="comment">//将坐标从src复制到这个mContentRect矩形</span></span><br><span class="line">    mContentRect.<span class="built_in">set</span>(calculateRect());</span><br><span class="line">    <span class="keyword">if</span> (!mBorderOverlay &amp;&amp; mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//允许边框重叠操作</span></span><br><span class="line">        mContentRect.inset(mBorderWidth - <span class="number">0.0</span>f, mBorderWidth - <span class="number">0.0</span>f);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">        <span class="comment">//边框半径</span></span><br><span class="line">        mBorderRadius = Math.<span class="built_in">min</span>((mContentRect.<span class="built_in">width</span>() - mBorderWidth) / <span class="number">2.0</span>f, (mContentRect.<span class="built_in">height</span>() - mBorderWidth) / <span class="number">2.0</span>f);</span><br><span class="line">        <span class="comment">//内容半径</span></span><br><span class="line">        mContentRadius = Math.<span class="built_in">min</span>(mContentRect.<span class="built_in">width</span>() / <span class="number">2.0</span>f, mContentRect.<span class="built_in">height</span>() / <span class="number">2.0</span>f);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> 2017/8/21</span></span><br><span class="line">    &#125;</span><br><span class="line">    updateMatrix(bitmapShader);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//计算矩形大小</span></span><br><span class="line"><span class="keyword">private</span> RectF calculateRect() &#123;</span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">width</span> = mWidth - getPaddingLeft() - getPaddingRight();</span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">height</span> = mHeight - getPaddingTop() - getPaddingBottom();</span><br><span class="line">    <span class="built_in">int</span> left = getPaddingLeft();</span><br><span class="line">    <span class="built_in">int</span> top = getPaddingTop();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RectF(left, top, left + <span class="built_in">width</span>, top + <span class="built_in">height</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//更新矩阵（这里使用ImageView CENTER_CROP类似计算 所以我们这个控件也仅支持CENTER_CROP 其他的都不起作用）</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> updateMatrix(BitmapShader bitmapShader) &#123;</span><br><span class="line">    <span class="built_in">float</span> <span class="built_in">scale</span>;</span><br><span class="line">    <span class="built_in">float</span> dx = <span class="number">0</span>, dy = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> bHeight = mBitmap.getHeight();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> bWidth = mBitmap.getWidth();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">float</span> cWidth = mContentRect.<span class="built_in">width</span>();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">float</span> cHeight = mContentRect.<span class="built_in">height</span>();</span><br><span class="line">    <span class="comment">//计算缩放比例 平移距离</span></span><br><span class="line">    <span class="keyword">if</span> (bWidth * cHeight &gt; cWidth * bHeight) &#123;</span><br><span class="line">        <span class="comment">//宽度比 &gt; 高度比 取高度比缩放</span></span><br><span class="line">        <span class="built_in">scale</span> = cHeight / (<span class="built_in">float</span>) bHeight;</span><br><span class="line">        <span class="comment">//计算横向移动距离</span></span><br><span class="line">        dx = (cWidth - bWidth * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">scale</span> = cWidth / (<span class="built_in">float</span>) bWidth;</span><br><span class="line">        dy = (cHeight - bHeight * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">    &#125;</span><br><span class="line">    Matrix mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="comment">//缩放 平移</span></span><br><span class="line">    mMatrix.setScale(<span class="built_in">scale</span>, <span class="built_in">scale</span>);</span><br><span class="line">    mMatrix.postTranslate(Math.<span class="built_in">round</span>(dx) + mContentRect.left, Math.<span class="built_in">round</span>(dy) + mContentRect.left);</span><br><span class="line">    <span class="comment">// 设置变换矩阵</span></span><br><span class="line">    bitmapShader.setLocalMatrix(mMatrix);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li><p>接下来需要在onDraw中进行绘制操作：</p><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onDraw(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBitmap == null) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">        drawCircle(<span class="keyword">canvas</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">        drawRoundRect(<span class="keyword">canvas</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆角矩形</span></span><br><span class="line">private void drawRoundRect(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mFillPaint);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBitmapPaint);</span><br><span class="line">    <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBorderPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆形</span></span><br><span class="line">private void drawCircle(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mFillPaint);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mBitmapPaint);</span><br><span class="line">    <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mBorderRadius, mBorderPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>到这一步，就是万事具备，只欠东风。我们需要在合适的地方来调用getBitmapFormDrawable和updateSteup方法，到现在还没有调用过这两个方法。不卖关子直接贴出代码：</p><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">invalidate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mBitmap = getBitmapFormDrawable();</span><br><span class="line">    updateSetup();</span><br><span class="line">    <span class="keyword">super</span>.invalidate();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">    <span class="keyword">if</span> (w &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        mWidth = w;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (h &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        mHeight = h;</span><br><span class="line">    &#125;</span><br><span class="line">    invalidate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>最开始想在setImageDrawable调用这两个方法，在跟踪源码的是否发现，ImageView的大部分设置图片的最终都调用了setImageDrawable方法，但是setImageURI并没有。</p><p>可是它们都调用了invalidate方法，而且当参数改变的时候也会调用这个方法。所以在这里获取getBitmapFormDrawable和updateSteup。</p><p>最后我们需要在onSizeChanged获取到mWidth 、mHeight 并invalidate，ShapIamgeView就大功告成了。</p><h4 id="五-代码设置自定义属性"><a href="#五-代码设置自定义属性" class="headerlink" title="五 代码设置自定义属性"></a>五 代码设置自定义属性</h4><p>我们发现6个自定义属性只能在xml配置，但是我们想要通过代码改变怎么办呢？其实也很简单，拿自定义边框宽度属性举个例子：<br></p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBorderWidth</span><span class="params">(<span class="keyword">int</span> borderWidth)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (mBorderWidth == borderWidth) &#123;</span><br><span class="line">         <span class="keyword">return</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     mBorderPaint.setColor(mBorderWidth = borderWidth);</span><br><span class="line">     invalidate();</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure><p></p><p>就是这样，我们就可以得到开头效果图一样的运行效果了，上面四部曲注释也很详细了。</p><p>最后福利，贴出完整代码(没有通过代码设置自定义属性的方法)：</p><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> class ShapeImageView extends ImageView &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> SHAPE_CIRCLE = <span class="number">0</span>;  <span class="comment">//圆形</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> SHAPE_ROUND = <span class="number">1</span>;   <span class="comment">//圆角</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_BORDER_WIDTH = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_ROUND_RADIUS = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_BORDER_COLOR = Color.BLACK;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_FILL_COLOR = Color.TRANSPARENT;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">boolean</span> DEFAULT_BORDER_OVERLAY = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_DRAWABLE_DIMENSION = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mRoundRadius; <span class="comment">//圆角</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mBorderWidth; <span class="comment">//边框宽</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mBorderColor; <span class="comment">//边框颜色</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mFillColor;   <span class="comment">//填充颜色</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">boolean</span> mBorderOverlay;  <span class="comment">//边框叠加</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mShapeType; <span class="comment">//形状</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RectF mContentRect = <span class="keyword">new</span> RectF();</span><br><span class="line">    <span class="keyword">private</span> Paint mBorderPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    <span class="keyword">private</span> Paint mBitmapPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    <span class="keyword">private</span> Paint mFillPaint = <span class="keyword">new</span> Paint();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">float</span> mContentRadius;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">float</span> mBorderRadius;</span><br><span class="line">    <span class="keyword">private</span> Bitmap mBitmap;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mWidth;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mHeight;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context) &#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context, @Nullable AttributeSet attrs) &#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context, AttributeSet attrs, <span class="built_in">int</span> defStyleAttr) &#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageView, defStyleAttr, <span class="number">0</span>);</span><br><span class="line">        mBorderWidth = a.getDimensionPixelSize(R.styleable.ShapeImageView_siv_border_width, DEFAULT_BORDER_WIDTH);</span><br><span class="line">        mBorderColor = a.getColor(R.styleable.ShapeImageView_siv_border_color, DEFAULT_BORDER_COLOR);</span><br><span class="line">        mFillColor = a.getColor(R.styleable.ShapeImageView_siv_fill_color, DEFAULT_FILL_COLOR);</span><br><span class="line">        mBorderOverlay = a.getBoolean(R.styleable.ShapeImageView_siv_border_overlay, DEFAULT_BORDER_OVERLAY);</span><br><span class="line">        mShapeType = a.getInt(R.styleable.ShapeImageView_siv_shape_type, SHAPE_CIRCLE);</span><br><span class="line">        mRoundRadius = a.getDimensionPixelSize(R.styleable.ShapeImageView_siv_round_radius, DEFAULT_ROUND_RADIUS);</span><br><span class="line">        a.recycle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> invalidate() &#123;</span><br><span class="line">        mBitmap = getBitmapFormDrawable();</span><br><span class="line">        updateSetup();</span><br><span class="line">        <span class="keyword">super</span>.invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> onSizeChanged(<span class="built_in">int</span> w, <span class="built_in">int</span> h, <span class="built_in">int</span> oldw, <span class="built_in">int</span> oldh) &#123;</span><br><span class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">        <span class="keyword">if</span> (w &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mWidth = w;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (h &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mHeight = h;</span><br><span class="line">        &#125;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> onDraw(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">            drawCircle(canvas);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">            drawRoundRect(canvas);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//圆角矩形</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> drawRoundRect(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">            canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mFillPaint);</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBitmapPaint);</span><br><span class="line">        <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBorderPaint);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//圆形</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> drawCircle(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">            canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mFillPaint);</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mBitmapPaint);</span><br><span class="line">        <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mBorderRadius, mBorderPaint);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> updateSetup() &#123;</span><br><span class="line">        <span class="keyword">if</span> (mWidth == <span class="number">0</span> &amp;&amp; mHeight == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">super</span>.invalidate();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        BitmapShader bitmapShader = <span class="keyword">new</span> BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line">        mBitmapPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mBitmapPaint.setShader(bitmapShader);</span><br><span class="line"></span><br><span class="line">        mBorderPaint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        mBorderPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mBorderPaint.setColor(mBorderColor);</span><br><span class="line">        mBorderPaint.setStrokeWidth(mBorderWidth);</span><br><span class="line"></span><br><span class="line">        mFillPaint.setStyle(Paint.Style.FILL);</span><br><span class="line">        mFillPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mFillPaint.setColor(mFillColor);</span><br><span class="line">        <span class="comment">//边框</span></span><br><span class="line">        mContentRect.<span class="built_in">set</span>(calculateRect());</span><br><span class="line">        <span class="keyword">if</span> (!mBorderOverlay &amp;&amp; mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mContentRect.inset(mBorderWidth - <span class="number">0.0</span>f, mBorderWidth - <span class="number">0.0</span>f);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">            <span class="comment">//边框半径</span></span><br><span class="line">            mBorderRadius = Math.<span class="built_in">min</span>((mContentRect.<span class="built_in">width</span>() - mBorderWidth) / <span class="number">2.0</span>f, (mContentRect.<span class="built_in">height</span>() - mBorderWidth) / <span class="number">2.0</span>f);</span><br><span class="line">            <span class="comment">//内容半径</span></span><br><span class="line">            mContentRadius = Math.<span class="built_in">min</span>(mContentRect.<span class="built_in">width</span>() / <span class="number">2.0</span>f, mContentRect.<span class="built_in">height</span>() / <span class="number">2.0</span>f);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">            <span class="comment">// <span class="doctag">TODO:</span> 2017/8/21</span></span><br><span class="line">        &#125;</span><br><span class="line">        updateMatrix(bitmapShader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> updateMatrix(BitmapShader bitmapShader) &#123;</span><br><span class="line">        <span class="built_in">float</span> <span class="built_in">scale</span>;</span><br><span class="line">        <span class="built_in">float</span> dx = <span class="number">0</span>, dy = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> bHeight = mBitmap.getHeight();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> bWidth = mBitmap.getWidth();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">float</span> cWidth = mContentRect.<span class="built_in">width</span>();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">float</span> cHeight = mContentRect.<span class="built_in">height</span>();</span><br><span class="line">        <span class="comment">//计算缩放比例 平移距离</span></span><br><span class="line">        <span class="keyword">if</span> (bWidth * cHeight &gt; cWidth * bHeight) &#123;</span><br><span class="line">            <span class="comment">//宽度比 &gt; 高度比 取高度比缩放</span></span><br><span class="line">            <span class="built_in">scale</span> = cHeight / (<span class="built_in">float</span>) bHeight;</span><br><span class="line">            <span class="comment">//计算横向移动距离</span></span><br><span class="line">            dx = (cWidth - bWidth * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">scale</span> = cWidth / (<span class="built_in">float</span>) bWidth;</span><br><span class="line">            dy = (cHeight - bHeight * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">        &#125;</span><br><span class="line">        Matrix mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">        mMatrix.setScale(<span class="built_in">scale</span>, <span class="built_in">scale</span>);</span><br><span class="line">        mMatrix.postTranslate(Math.<span class="built_in">round</span>(dx) + mContentRect.left, Math.<span class="built_in">round</span>(dy) + mContentRect.left);</span><br><span class="line">        bitmapShader.setLocalMatrix(mMatrix);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RectF calculateRect() &#123;</span><br><span class="line">        <span class="built_in">int</span> <span class="built_in">width</span> = mWidth - getPaddingLeft() - getPaddingRight();</span><br><span class="line">        <span class="built_in">int</span> <span class="built_in">height</span> = mHeight - getPaddingTop() - getPaddingBottom();</span><br><span class="line">        <span class="built_in">int</span> left = getPaddingLeft();</span><br><span class="line">        <span class="built_in">int</span> top = getPaddingTop();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RectF(left, top, left + <span class="built_in">width</span>, top + <span class="built_in">height</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Bitmap getBitmapFormDrawable() &#123;</span><br><span class="line">        Drawable drawable = getDrawable();</span><br><span class="line">        <span class="keyword">if</span> (drawable == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (drawable <span class="keyword">instanceof</span> BitmapDrawable) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((BitmapDrawable) drawable).getBitmap();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">int</span> dWidth = drawable.getIntrinsicWidth() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicWidth();</span><br><span class="line">            <span class="built_in">int</span> dHeight = drawable.getIntrinsicHeight() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicHeight();</span><br><span class="line">            Bitmap bitmap = Bitmap.createBitmap(dWidth, dHeight, BITMAP_CONFIG);</span><br><span class="line">            Canvas canvas = <span class="keyword">new</span> Canvas(bitmap);</span><br><span class="line">            drawable.setBounds(<span class="number">0</span>, <span class="number">0</span>, canvas.getWidth(), canvas.getHeight());</span><br><span class="line">            drawable.<span class="title">draw</span>(canvas);</span><br><span class="line">            <span class="keyword">return</span> bitmap;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>到此……</p><p>全剧终！！！</p></div><div><div><div style="text-align:center;color:#ccc;font-size:14px"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div></div></div><div><div class="my_post_copyright"><script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script><script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><p><span>本文标题:</span><a href="/2018/01/05/Android-自定义CircleImageView/">Android 自定义CircleImageView</a></p><p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p><p><span>发布时间:</span>2018年01月05日 - 15:01</p><p><span>最后更新:</span>2018年01月05日 - 16:01</p><p><span>原始链接:</span><a href="/2018/01/05/Android-自定义CircleImageView/" title="Android 自定义CircleImageView">http://yoursite.com/2018/01/05/Android-自定义CircleImageView/</a><span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/" aria-label="复制成功！"></i></span></p><p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p></div><script>var clipboard=new Clipboard(".fa-clipboard");$(".fa-clipboard").click(function(){clipboard.on("success",function(){swal({title:"",text:"复制成功",icon:"success",showConfirmButton:!0})})})</script></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a><a href="/tags/自定义控件/" rel="tag"><i class="fa fa-tag"></i> 自定义控件</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/01/02/Android-点击空白处-隐藏键盘/" rel="next" title="Android 点击空白处 隐藏键盘"><i class="fa fa-chevron-left"></i> Android 点击空白处 隐藏键盘</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/01/05/Android-绘图之Canvas相关API使用/" rel="prev" title="Android 绘图之Canvas相关API使用">Android 绘图之Canvas相关API使用<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="Joker Fu"><p class="site-author-name" itemprop="name">Joker Fu</p><p class="site-description motion-element" itemprop="description">博格，水滴石穿</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">24</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">11</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">11</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-自定义属性"><span class="nav-number">1.</span> <span class="nav-text">一 自定义属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-获取自定义属性"><span class="nav-number">2.</span> <span class="nav-text">二 获取自定义属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-ShapeImageView之onMeasure"><span class="nav-number">3.</span> <span class="nav-text">三 ShapeImageView之onMeasure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-ShapeImageView之onDraw"><span class="nav-number">4.</span> <span class="nav-text">四 ShapeImageView之onDraw</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五-代码设置自定义属性"><span class="nav-number">5.</span> <span class="nav-text">五 代码设置自定义属性</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">Joker Fu</span></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-users"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人</span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><script type="text/javascript">!function(e,t){var c,n=e.getElementsByTagName("script")[0];"function"!=typeof LivereTower&&((c=e.createElement("script")).src="https://cdn-city.livere.com/js/embed.dist.js",c.async=!0,n.parentNode.insertBefore(c,n))}(document)</script><script type="text/javascript">var isfetched=!1,isXml=!0,search_path="search.xml";0===search_path.length?search_path="search.xml":/json$/i.test(search_path)&&(isXml=!1);var path="/"+search_path,onPopupClose=function(t){$(".popup").hide(),$("#local-search-input").val(""),$(".search-result-list").remove(),$("#no-result").remove(),$(".local-search-pop-overlay").remove(),$("body").css("overflow","")};function proceedsearch(){$("body").append('<div class="search-popup-overlay local-search-pop-overlay"></div>').css("overflow","hidden"),$(".search-popup-overlay").click(onPopupClose),$(".popup").toggle();var t=$("#local-search-input");t.attr("autocapitalize","none"),t.attr("autocorrect","off"),t.focus()}var searchFunc=function(t,e,o){"use strict";$("body").append('<div class="search-popup-overlay local-search-pop-overlay"><div id="search-loading-icon"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div></div>').css("overflow","hidden"),$("#search-loading-icon").css("margin","20% auto 0 auto").css("text-align","center"),$.ajax({url:t,dataType:isXml?"xml":"json",async:!0,success:function(t){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var n=isXml?$("entry",t).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get():t,r=document.getElementById(e),s=document.getElementById(o),a=function(){var t=r.value.trim().toLowerCase(),e=t.split(/[\s\-]+/);e.length>1&&e.push(t);var o=[];if(t.length>0&&n.forEach(function(n){var r=!1,s=0,a=0,i=n.title.trim(),c=i.toLowerCase(),l=n.content.trim().replace(/<[^>]+>/g,""),h=l.toLowerCase(),p=decodeURIComponent(n.url),u=[],f=[];if(""!=i&&(e.forEach(function(t){function e(t,e,o){var n=t.length;if(0===n)return[];var r=0,s=[],a=[];for(o||(e=e.toLowerCase(),t=t.toLowerCase());(s=e.indexOf(t,r))>-1;)a.push({position:s,word:t}),r=s+n;return a}u=u.concat(e(t,c,!1)),f=f.concat(e(t,h,!1))}),(u.length>0||f.length>0)&&(r=!0,s=u.length+f.length)),r){[u,f].forEach(function(t){t.sort(function(t,e){return e.position!==t.position?e.position-t.position:t.word.length-e.word.length})});function d(e,o,n,r){for(var s=r[r.length-1],i=s.position,c=s.word,l=[],h=0;i+c.length<=n&&0!=r.length;){c===t&&h++,l.push({position:i,length:c.length});var p=i+c.length;for(r.pop();0!=r.length&&(i=(s=r[r.length-1]).position,c=s.word,p>i);)r.pop()}return a+=h,{hits:l,start:o,end:n,searchTextCount:h}}var g=[];0!=u.length&&g.push(d(0,0,i.length,u));for(var v=[];0!=f.length;){var $=f[f.length-1],C=$.position,m=$.word,x=C-20,w=C+80;x<0&&(x=0),w<C+m.length&&(w=C+m.length),w>l.length&&(w=l.length),v.push(d(0,x,w,f))}v.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hits.length!==e.hits.length?e.hits.length-t.hits.length:t.start-e.start});var y=parseInt("1");y>=0&&(v=v.slice(0,y));function T(t,e){var o="",n=e.start;return e.hits.forEach(function(e){o+=t.substring(n,e.position);var r=e.position+e.length;o+='<b class="search-keyword">'+t.substring(e.position,r)+"</b>",n=r}),o+=t.substring(n,e.end)}var b="";0!=g.length?b+="<li><a href='"+p+"' class='search-result-title'>"+T(i,g[0])+"</a>":b+="<li><a href='"+p+"' class='search-result-title'>"+i+"</a>",v.forEach(function(t){b+="<a href='"+p+'\'><p class="search-result">'+T(l,t)+"...</p></a>"}),b+="</li>",o.push({item:b,searchTextCount:a,hitCount:s,id:o.length})}}),1===e.length&&""===e[0])s.innerHTML='<div id="no-result"><i class="fa fa-search fa-5x" /></div>';else if(0===o.length)s.innerHTML='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>';else{o.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hitCount!==e.hitCount?e.hitCount-t.hitCount:e.id-t.id});var a='<ul class="search-result-list">';o.forEach(function(t){a+=t.item}),a+="</ul>",s.innerHTML=a}};r.addEventListener("input",a),$(".local-search-pop-overlay").remove(),$("body").css("overflow",""),proceedsearch()}})};$(".popup-trigger").click(function(t){t.stopPropagation(),!1===isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(onPopupClose),$(".popup").click(function(t){t.stopPropagation()}),$(document).on("keyup",function(t){27===t.which&&$(".search-popup").is(":visible")&&onPopupClose()})</script></body></html>
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,自定义控件," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自">
+<meta name="keywords" content="Android,自定义控件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 自定义CircleImageView">
+<meta property="og:url" content="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/index.html">
+<meta property="og:site_name" content="博格">
+<meta property="og:description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png">
+<meta property="og:updated_time" content="2018-01-05T08:51:18.608Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 自定义CircleImageView">
+<meta name="twitter:description" content="android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:  看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。 接下来 嗯 嗯 啊 啊 啊…… 嗯 得先来个说明  本文标题说的是自">
+<meta name="twitter:image" content="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/"/>
+
+
+
+
+
+  <title>Android 自定义CircleImageView | 博格</title>
+  
+
+
+
+
+
+
+
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">博格</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joker Fu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博格">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 自定义CircleImageView</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-05T15:43:03+08:00">
+                2018-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/自定义控件/" itemprop="url" rel="index">
+                    <span itemprop="name">自定义控件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 热度
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,840字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>android开发中时常用到圆形、圆角的ImageView，网上也有很多现成的轮子，本不应该重复造轮子。但是本着不断学习和进步的决心，今天就来手撸一个圆形、圆角ImageView，且可设置边框颜色、大小。无图无真相，首先我们来看下效果图:</p>
+<p><img src="http://114.67.156.211/bolg/android/Android%20%E8%87%AA%E5%AE%9A%E4%B9%89CircleImageView/2018-01-05-001.png" alt="我是效果图"></p>
+<p>看完效果图，不知道各位看官觉得如何，觉得好那就 just do it ! (就是干！)。</p>
+<p>接下来 嗯 嗯 啊 啊 啊……</p>
+<p>嗯 得先来个说明 </p>
+<p>本文标题说的是自定义CircleImageView，但是我们实际干的却是圆形 还有圆角矩形。所以我们就不叫CircleImageView，且叫它ShapeImageView，虽然只有两种形状。觉得不合适的可随意修改嘛…</p>
+<p>然后我们得知道自定义控件的四步曲：<br>1、自定义View的属性<br>2、在View的构造方法中获得我们自定义的属性<br>3、重写onMeasure<br>4、重写onDraw</p>
+<p>接下来就正式开干……</p>
+<h4 id="一-自定义属性"><a href="#一-自定义属性" class="headerlink" title="一 自定义属性"></a>一 自定义属性</h4><p>为了感觉高大上，我们的自定义控件还是配上几个自定义属性才像话嘛！！！总共定义了6个自定义属性，分别是边框宽、边框颜色、边框重叠、填充颜色、圆角半径、形状类型。<br><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;declare-styleable <span class="built_in">name</span>=<span class="string">"ShapeImageView"</span>&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_width"</span> <span class="built_in">format</span>=<span class="string">"dimension"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_color"</span> <span class="built_in">format</span>=<span class="string">"color"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_border_overlay"</span> <span class="built_in">format</span>=<span class="string">"boolean"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_fill_color"</span> <span class="built_in">format</span>=<span class="string">"color"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_round_radius"</span> <span class="built_in">format</span>=<span class="string">"dimension"</span>/&gt;</span><br><span class="line">    &lt;attr <span class="built_in">name</span>=<span class="string">"siv_shape_type"</span>&gt;</span><br><span class="line">        &lt;enum <span class="built_in">name</span>=<span class="string">"circle"</span> value=<span class="string">"0"</span>/&gt;</span><br><span class="line">        &lt;enum <span class="built_in">name</span>=<span class="string">"round"</span> value=<span class="string">"1"</span>/&gt;</span><br><span class="line">    &lt;/attr&gt;</span><br><span class="line">&lt;/declare-styleable&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="二-获取自定义属性"><a href="#二-获取自定义属性" class="headerlink" title="二 获取自定义属性"></a>二 获取自定义属性</h4><p>这里得分两步，这第一步就得是继承自我们的ImageView，并重写他的构造方法：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这里我们让一个、两个参数的构造方法都去调用三个参数的构造方法</span></span><br><span class="line"><span class="selector-tag">public</span> <span class="selector-tag">class</span> <span class="selector-tag">ShapeImageView</span> <span class="selector-tag">extends</span> <span class="selector-tag">ImageView</span> &#123;</span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context) &#123;</span><br><span class="line">        <span class="selector-tag">this</span>(context, null); </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context, <span class="variable">@Nullable</span> AttributeSet attrs) &#123;</span><br><span class="line">        <span class="selector-tag">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="selector-tag">public</span> <span class="selector-tag">ShapeImageView</span>(Context context, <span class="variable">@Nullable</span> AttributeSet attrs, int defStyleAttr) &#123;</span><br><span class="line">        <span class="selector-tag">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>没错，这第二步就是获取自定义属性了，因为我们都统一调用的三个参数的构造方法，所以直接在三个参数的构造方法中获取属性：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">ShapeImageView(Context </span><span class="built_in">context</span>, AttributeSet attrs, int defStyleAttr) &#123;</span><br><span class="line">    super(<span class="built_in">context</span>, attrs, defStyleAttr)<span class="comment">;</span></span><br><span class="line">    TypedArray a = <span class="built_in">context</span>.obtainStyledAttributes(attrs, R.styleable.<span class="keyword">ShapeImageView, </span>defStyleAttr, <span class="number">0</span>)<span class="comment">;</span></span><br><span class="line">    mBorderWidth = a.getDimensionPixelSize(R.styleable.<span class="keyword">ShapeImageView_siv_border_width, </span>DEFAULT_BORDER_WIDTH)<span class="comment">;</span></span><br><span class="line">    mBorderColor = a.getColor(R.styleable.<span class="keyword">ShapeImageView_siv_border_color, </span>DEFAULT_BORDER_COLOR)<span class="comment">;</span></span><br><span class="line">    mFillColor = a.getColor(R.styleable.<span class="keyword">ShapeImageView_siv_fill_color, </span>DEFAULT_FILL_COLOR)<span class="comment">;</span></span><br><span class="line">    mBorderOverlay = a.getBoolean(R.styleable.<span class="keyword">ShapeImageView_siv_border_overlay, </span>DEFAULT_BORDER_OVERLAY)<span class="comment">;</span></span><br><span class="line">    mShapeType = a.getInt(R.styleable.<span class="keyword">ShapeImageView_siv_shape_type, </span><span class="keyword">SHAPE_CIRCLE);</span></span><br><span class="line"><span class="keyword"> </span>   mRoundRadius = a.getDimensionPixelSize(R.styleable.<span class="keyword">ShapeImageView_siv_round_radius, </span>DEFAULT_ROUND_RADIUS)<span class="comment">;</span></span><br><span class="line">    a.recycle()<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里没什么好说的，就是把我们刚才的6个自定义属性值获取出来了，没有值的都赋上默认值。记得最后调用下recycle()，就行了。</p>
+<h4 id="三-ShapeImageView之onMeasure"><a href="#三-ShapeImageView之onMeasure" class="headerlink" title="三 ShapeImageView之onMeasure"></a>三 ShapeImageView之onMeasure</h4><p>我们这里是继承自ImageView，所以测量的事情就让ImageView去祸祸，这一步我们就这么愉快的完成了。</p>
+<h4 id="四-ShapeImageView之onDraw"><a href="#四-ShapeImageView之onDraw" class="headerlink" title="四 ShapeImageView之onDraw"></a>四 ShapeImageView之onDraw</h4><p>这一步是最关键的一步了，也是我们的最后一步，完成它就可以看到最终的效果图了。接下来我们就需要把这一步细分成几小步来完成：</p>
+<ul>
+<li><p>获取要绘制的Bitmap</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从Drawable中取出Bitmap </span></span><br><span class="line"><span class="keyword">private</span> Bitmap getBitmapFormDrawable() &#123;</span><br><span class="line">    Drawable drawable = getDrawable();</span><br><span class="line">    <span class="keyword">if</span> (drawable == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//是BitmapDrawable直接取出Bitmap </span></span><br><span class="line">    <span class="keyword">if</span> (drawable <span class="keyword">instanceof</span> BitmapDrawable) &#123;</span><br><span class="line">        <span class="keyword">return</span> ((BitmapDrawable) drawable).getBitmap();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//这里需要对DEFAULT_DRAWABLE_DIMENSION说明：在ColorDrawable中getIntrinsicWidth为-1，所以给了个默认值2</span></span><br><span class="line">        <span class="keyword">int</span> dWidth = drawable.getIntrinsicWidth() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicWidth();</span><br><span class="line">        <span class="keyword">int</span> dHeight = drawable.getIntrinsicHeight() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicHeight(); </span><br><span class="line">        <span class="comment">//创建Bitmap画布，并绘制出来</span></span><br><span class="line">        Bitmap bitmap = Bitmap.createBitmap(dWidth, dHeight, BITMAP_CONFIG);</span><br><span class="line">        Canvas canvas = <span class="keyword">new</span> Canvas(bitmap);</span><br><span class="line">        drawable.setBounds(<span class="number">0</span>, <span class="number">0</span>, canvas.getWidth(), canvas.getHeight());</span><br><span class="line">        drawable.draw(canvas);</span><br><span class="line">        <span class="keyword">return</span> bitmap;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更新设置<br>这里需要简单介绍下BitmapShader:</p>
+<blockquote>
+<p>BitmapShader，顾名思义，就是用Bitmap对绘制的图形进行渲染着色，其实就是用图片对图形进行贴图。<br>BitmapShader构造函数如下所示：<br>BitmapShader(Bitmap bitmap, Shader.TileMode tileX, Shader.TileMode tileY)<br>第一个参数是Bitmap对象，该Bitmap决定了用什么图片对绘制的图形进行贴图。<br>第二个参数和第三个参数都是Shader.TileMode类型的枚举值，有以下三个取值：CLAMP(拉伸) 、REPEAT(重复) 和 MIRROR(镜像)。</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> updateSetup() &#123;</span><br><span class="line">    <span class="keyword">if</span> (mWidth == <span class="number">0</span> &amp;&amp; mHeight == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.invalidate();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置BitmapShader  使用拉伸模式</span></span><br><span class="line">    BitmapShader bitmapShader = <span class="keyword">new</span> BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line">    <span class="comment">//设置BitmapPaint</span></span><br><span class="line">    mBitmapPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mBitmapPaint.setShader(bitmapShader);</span><br><span class="line">    <span class="comment">//设置BorderPaint</span></span><br><span class="line">    mBorderPaint.setStyle(Paint.Style.STROKE);</span><br><span class="line">    mBorderPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mBorderPaint.setColor(mBorderColor);</span><br><span class="line">    mBorderPaint.setStrokeWidth(mBorderWidth);</span><br><span class="line">    <span class="comment">//设置FillPaint</span></span><br><span class="line">    mFillPaint.setStyle(Paint.Style.FILL);</span><br><span class="line">    mFillPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">    mFillPaint.setColor(mFillColor);</span><br><span class="line">    <span class="comment">//将坐标从src复制到这个mContentRect矩形</span></span><br><span class="line">    mContentRect.<span class="built_in">set</span>(calculateRect());</span><br><span class="line">    <span class="keyword">if</span> (!mBorderOverlay &amp;&amp; mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//允许边框重叠操作</span></span><br><span class="line">        mContentRect.inset(mBorderWidth - <span class="number">0.0</span>f, mBorderWidth - <span class="number">0.0</span>f);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">        <span class="comment">//边框半径</span></span><br><span class="line">        mBorderRadius = Math.<span class="built_in">min</span>((mContentRect.<span class="built_in">width</span>() - mBorderWidth) / <span class="number">2.0</span>f, (mContentRect.<span class="built_in">height</span>() - mBorderWidth) / <span class="number">2.0</span>f);</span><br><span class="line">        <span class="comment">//内容半径</span></span><br><span class="line">        mContentRadius = Math.<span class="built_in">min</span>(mContentRect.<span class="built_in">width</span>() / <span class="number">2.0</span>f, mContentRect.<span class="built_in">height</span>() / <span class="number">2.0</span>f);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> 2017/8/21</span></span><br><span class="line">    &#125;</span><br><span class="line">    updateMatrix(bitmapShader);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//计算矩形大小</span></span><br><span class="line"><span class="keyword">private</span> RectF calculateRect() &#123;</span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">width</span> = mWidth - getPaddingLeft() - getPaddingRight();</span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">height</span> = mHeight - getPaddingTop() - getPaddingBottom();</span><br><span class="line">    <span class="built_in">int</span> left = getPaddingLeft();</span><br><span class="line">    <span class="built_in">int</span> top = getPaddingTop();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RectF(left, top, left + <span class="built_in">width</span>, top + <span class="built_in">height</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//更新矩阵（这里使用ImageView CENTER_CROP类似计算 所以我们这个控件也仅支持CENTER_CROP 其他的都不起作用）</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> updateMatrix(BitmapShader bitmapShader) &#123;</span><br><span class="line">    <span class="built_in">float</span> <span class="built_in">scale</span>;</span><br><span class="line">    <span class="built_in">float</span> dx = <span class="number">0</span>, dy = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> bHeight = mBitmap.getHeight();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">int</span> bWidth = mBitmap.getWidth();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">float</span> cWidth = mContentRect.<span class="built_in">width</span>();</span><br><span class="line">    <span class="keyword">final</span> <span class="built_in">float</span> cHeight = mContentRect.<span class="built_in">height</span>();</span><br><span class="line">    <span class="comment">//计算缩放比例 平移距离</span></span><br><span class="line">    <span class="keyword">if</span> (bWidth * cHeight &gt; cWidth * bHeight) &#123;</span><br><span class="line">        <span class="comment">//宽度比 &gt; 高度比 取高度比缩放</span></span><br><span class="line">        <span class="built_in">scale</span> = cHeight / (<span class="built_in">float</span>) bHeight;</span><br><span class="line">        <span class="comment">//计算横向移动距离</span></span><br><span class="line">        dx = (cWidth - bWidth * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">scale</span> = cWidth / (<span class="built_in">float</span>) bWidth;</span><br><span class="line">        dy = (cHeight - bHeight * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">    &#125;</span><br><span class="line">    Matrix mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="comment">//缩放 平移</span></span><br><span class="line">    mMatrix.setScale(<span class="built_in">scale</span>, <span class="built_in">scale</span>);</span><br><span class="line">    mMatrix.postTranslate(Math.<span class="built_in">round</span>(dx) + mContentRect.left, Math.<span class="built_in">round</span>(dy) + mContentRect.left);</span><br><span class="line">    <span class="comment">// 设置变换矩阵</span></span><br><span class="line">    bitmapShader.setLocalMatrix(mMatrix);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>接下来需要在onDraw中进行绘制操作：</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onDraw(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBitmap == null) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">        drawCircle(<span class="keyword">canvas</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">        drawRoundRect(<span class="keyword">canvas</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆角矩形</span></span><br><span class="line">private void drawRoundRect(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mFillPaint);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBitmapPaint);</span><br><span class="line">    <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBorderPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆形</span></span><br><span class="line">private void drawCircle(Canvas <span class="keyword">canvas</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mFillPaint);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mBitmapPaint);</span><br><span class="line">    <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">canvas</span>.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mBorderRadius, mBorderPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到这一步，就是万事具备，只欠东风。我们需要在合适的地方来调用getBitmapFormDrawable和updateSteup方法，到现在还没有调用过这两个方法。不卖关子直接贴出代码：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">invalidate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mBitmap = getBitmapFormDrawable();</span><br><span class="line">    updateSetup();</span><br><span class="line">    <span class="keyword">super</span>.invalidate();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">    <span class="keyword">if</span> (w &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        mWidth = w;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (h &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        mHeight = h;</span><br><span class="line">    &#125;</span><br><span class="line">    invalidate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>最开始想在setImageDrawable调用这两个方法，在跟踪源码的是否发现，ImageView的大部分设置图片的最终都调用了setImageDrawable方法，但是setImageURI并没有。</p>
+<p>可是它们都调用了invalidate方法，而且当参数改变的时候也会调用这个方法。所以在这里获取getBitmapFormDrawable和updateSteup。</p>
+<p>最后我们需要在onSizeChanged获取到mWidth 、mHeight 并invalidate，ShapIamgeView就大功告成了。</p>
+<h4 id="五-代码设置自定义属性"><a href="#五-代码设置自定义属性" class="headerlink" title="五 代码设置自定义属性"></a>五 代码设置自定义属性</h4><p>我们发现6个自定义属性只能在xml配置，但是我们想要通过代码改变怎么办呢？其实也很简单，拿自定义边框宽度属性举个例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBorderWidth</span><span class="params">(<span class="keyword">int</span> borderWidth)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (mBorderWidth == borderWidth) &#123;</span><br><span class="line">         <span class="keyword">return</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     mBorderPaint.setColor(mBorderWidth = borderWidth);</span><br><span class="line">     invalidate();</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>就是这样，我们就可以得到开头效果图一样的运行效果了，上面四部曲注释也很详细了。</p>
+<p>最后福利，贴出完整代码(没有通过代码设置自定义属性的方法)：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> class ShapeImageView extends ImageView &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> SHAPE_CIRCLE = <span class="number">0</span>;  <span class="comment">//圆形</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> SHAPE_ROUND = <span class="number">1</span>;   <span class="comment">//圆角</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_BORDER_WIDTH = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_ROUND_RADIUS = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_BORDER_COLOR = Color.BLACK;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_FILL_COLOR = Color.TRANSPARENT;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">boolean</span> DEFAULT_BORDER_OVERLAY = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="built_in">int</span> DEFAULT_DRAWABLE_DIMENSION = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mRoundRadius; <span class="comment">//圆角</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mBorderWidth; <span class="comment">//边框宽</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mBorderColor; <span class="comment">//边框颜色</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mFillColor;   <span class="comment">//填充颜色</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">boolean</span> mBorderOverlay;  <span class="comment">//边框叠加</span></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mShapeType; <span class="comment">//形状</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RectF mContentRect = <span class="keyword">new</span> RectF();</span><br><span class="line">    <span class="keyword">private</span> Paint mBorderPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    <span class="keyword">private</span> Paint mBitmapPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    <span class="keyword">private</span> Paint mFillPaint = <span class="keyword">new</span> Paint();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">float</span> mContentRadius;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">float</span> mBorderRadius;</span><br><span class="line">    <span class="keyword">private</span> Bitmap mBitmap;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mWidth;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> mHeight;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context) &#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context, @Nullable AttributeSet attrs) &#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ShapeImageView(Context context, AttributeSet attrs, <span class="built_in">int</span> defStyleAttr) &#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageView, defStyleAttr, <span class="number">0</span>);</span><br><span class="line">        mBorderWidth = a.getDimensionPixelSize(R.styleable.ShapeImageView_siv_border_width, DEFAULT_BORDER_WIDTH);</span><br><span class="line">        mBorderColor = a.getColor(R.styleable.ShapeImageView_siv_border_color, DEFAULT_BORDER_COLOR);</span><br><span class="line">        mFillColor = a.getColor(R.styleable.ShapeImageView_siv_fill_color, DEFAULT_FILL_COLOR);</span><br><span class="line">        mBorderOverlay = a.getBoolean(R.styleable.ShapeImageView_siv_border_overlay, DEFAULT_BORDER_OVERLAY);</span><br><span class="line">        mShapeType = a.getInt(R.styleable.ShapeImageView_siv_shape_type, SHAPE_CIRCLE);</span><br><span class="line">        mRoundRadius = a.getDimensionPixelSize(R.styleable.ShapeImageView_siv_round_radius, DEFAULT_ROUND_RADIUS);</span><br><span class="line">        a.recycle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> invalidate() &#123;</span><br><span class="line">        mBitmap = getBitmapFormDrawable();</span><br><span class="line">        updateSetup();</span><br><span class="line">        <span class="keyword">super</span>.invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> onSizeChanged(<span class="built_in">int</span> w, <span class="built_in">int</span> h, <span class="built_in">int</span> oldw, <span class="built_in">int</span> oldh) &#123;</span><br><span class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</span><br><span class="line">        <span class="keyword">if</span> (w &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mWidth = w;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (h &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mHeight = h;</span><br><span class="line">        &#125;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> onDraw(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">            drawCircle(canvas);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">            drawRoundRect(canvas);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//圆角矩形</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> drawRoundRect(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">            canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mFillPaint);</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBitmapPaint);</span><br><span class="line">        <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            canvas.drawRoundRect(mContentRect, mRoundRadius, mRoundRadius, mBorderPaint);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//圆形</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> drawCircle(Canvas canvas) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mFillColor != Color.TRANSPARENT) &#123;</span><br><span class="line">            canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mFillPaint);</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mContentRadius, mBitmapPaint);</span><br><span class="line">        <span class="keyword">if</span> (mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            canvas.drawCircle(mContentRect.centerX(), mContentRect.centerY(), mBorderRadius, mBorderPaint);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> updateSetup() &#123;</span><br><span class="line">        <span class="keyword">if</span> (mWidth == <span class="number">0</span> &amp;&amp; mHeight == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mBitmap == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">super</span>.invalidate();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        BitmapShader bitmapShader = <span class="keyword">new</span> BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line">        mBitmapPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mBitmapPaint.setShader(bitmapShader);</span><br><span class="line"></span><br><span class="line">        mBorderPaint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        mBorderPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mBorderPaint.setColor(mBorderColor);</span><br><span class="line">        mBorderPaint.setStrokeWidth(mBorderWidth);</span><br><span class="line"></span><br><span class="line">        mFillPaint.setStyle(Paint.Style.FILL);</span><br><span class="line">        mFillPaint.setAntiAlias(<span class="keyword">true</span>);</span><br><span class="line">        mFillPaint.setColor(mFillColor);</span><br><span class="line">        <span class="comment">//边框</span></span><br><span class="line">        mContentRect.<span class="built_in">set</span>(calculateRect());</span><br><span class="line">        <span class="keyword">if</span> (!mBorderOverlay &amp;&amp; mBorderWidth &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            mContentRect.inset(mBorderWidth - <span class="number">0.0</span>f, mBorderWidth - <span class="number">0.0</span>f);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mShapeType == SHAPE_CIRCLE) &#123;</span><br><span class="line">            <span class="comment">//边框半径</span></span><br><span class="line">            mBorderRadius = Math.<span class="built_in">min</span>((mContentRect.<span class="built_in">width</span>() - mBorderWidth) / <span class="number">2.0</span>f, (mContentRect.<span class="built_in">height</span>() - mBorderWidth) / <span class="number">2.0</span>f);</span><br><span class="line">            <span class="comment">//内容半径</span></span><br><span class="line">            mContentRadius = Math.<span class="built_in">min</span>(mContentRect.<span class="built_in">width</span>() / <span class="number">2.0</span>f, mContentRect.<span class="built_in">height</span>() / <span class="number">2.0</span>f);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mShapeType == SHAPE_ROUND) &#123;</span><br><span class="line">            <span class="comment">// <span class="doctag">TODO:</span> 2017/8/21</span></span><br><span class="line">        &#125;</span><br><span class="line">        updateMatrix(bitmapShader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> updateMatrix(BitmapShader bitmapShader) &#123;</span><br><span class="line">        <span class="built_in">float</span> <span class="built_in">scale</span>;</span><br><span class="line">        <span class="built_in">float</span> dx = <span class="number">0</span>, dy = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> bHeight = mBitmap.getHeight();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">int</span> bWidth = mBitmap.getWidth();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">float</span> cWidth = mContentRect.<span class="built_in">width</span>();</span><br><span class="line">        <span class="keyword">final</span> <span class="built_in">float</span> cHeight = mContentRect.<span class="built_in">height</span>();</span><br><span class="line">        <span class="comment">//计算缩放比例 平移距离</span></span><br><span class="line">        <span class="keyword">if</span> (bWidth * cHeight &gt; cWidth * bHeight) &#123;</span><br><span class="line">            <span class="comment">//宽度比 &gt; 高度比 取高度比缩放</span></span><br><span class="line">            <span class="built_in">scale</span> = cHeight / (<span class="built_in">float</span>) bHeight;</span><br><span class="line">            <span class="comment">//计算横向移动距离</span></span><br><span class="line">            dx = (cWidth - bWidth * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">scale</span> = cWidth / (<span class="built_in">float</span>) bWidth;</span><br><span class="line">            dy = (cHeight - bHeight * <span class="built_in">scale</span>) * <span class="number">0.5</span>f;</span><br><span class="line">        &#125;</span><br><span class="line">        Matrix mMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">        mMatrix.setScale(<span class="built_in">scale</span>, <span class="built_in">scale</span>);</span><br><span class="line">        mMatrix.postTranslate(Math.<span class="built_in">round</span>(dx) + mContentRect.left, Math.<span class="built_in">round</span>(dy) + mContentRect.left);</span><br><span class="line">        bitmapShader.setLocalMatrix(mMatrix);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RectF calculateRect() &#123;</span><br><span class="line">        <span class="built_in">int</span> <span class="built_in">width</span> = mWidth - getPaddingLeft() - getPaddingRight();</span><br><span class="line">        <span class="built_in">int</span> <span class="built_in">height</span> = mHeight - getPaddingTop() - getPaddingBottom();</span><br><span class="line">        <span class="built_in">int</span> left = getPaddingLeft();</span><br><span class="line">        <span class="built_in">int</span> top = getPaddingTop();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RectF(left, top, left + <span class="built_in">width</span>, top + <span class="built_in">height</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Bitmap getBitmapFormDrawable() &#123;</span><br><span class="line">        Drawable drawable = getDrawable();</span><br><span class="line">        <span class="keyword">if</span> (drawable == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (drawable <span class="keyword">instanceof</span> BitmapDrawable) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((BitmapDrawable) drawable).getBitmap();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">int</span> dWidth = drawable.getIntrinsicWidth() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicWidth();</span><br><span class="line">            <span class="built_in">int</span> dHeight = drawable.getIntrinsicHeight() &lt;= <span class="number">0</span> ? DEFAULT_DRAWABLE_DIMENSION : drawable.getIntrinsicHeight();</span><br><span class="line">            Bitmap bitmap = Bitmap.createBitmap(dWidth, dHeight, BITMAP_CONFIG);</span><br><span class="line">            Canvas canvas = <span class="keyword">new</span> Canvas(bitmap);</span><br><span class="line">            drawable.setBounds(<span class="number">0</span>, <span class="number">0</span>, canvas.getWidth(), canvas.getHeight());</span><br><span class="line">            drawable.<span class="title">draw</span>(canvas);</span><br><span class="line">            <span class="keyword">return</span> bitmap;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到此……</p>
+<p>全剧终！！！</p>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div>
+    
+</div>
+
+		
+	</div>
+
+	<div>
+		
+			
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/01/05/Android-自定义CircleImageView/">Android 自定义CircleImageView</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p>
+  <p><span>发布时间:</span>2018年01月05日 - 15:01</p>
+  <p><span>最后更新:</span>2018年01月05日 - 16:01</p>
+  <p><span>原始链接:</span><a href="/2018/01/05/Android-自定义CircleImageView/" title="Android 自定义CircleImageView">http://yoursite.com/2018/01/05/Android-自定义CircleImageView/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/05/Android-自定义CircleImageView/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+		
+	</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+            <a href="/tags/自定义控件/" rel="tag"><i class="fa fa-tag"></i> 自定义控件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/Android-点击空白处-隐藏键盘/" rel="next" title="Android 点击空白处 隐藏键盘">
+                <i class="fa fa-chevron-left"></i> Android 点击空白处 隐藏键盘
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/05/Android-绘图之Canvas相关API使用/" rel="prev" title="Android 绘图之Canvas相关API使用">
+                Android 绘图之Canvas相关API使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Joker Fu" />
+            
+              <p class="site-author-name" itemprop="name">Joker Fu</p>
+              <p class="site-description motion-element" itemprop="description">博格，水滴石穿</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-自定义属性"><span class="nav-number">1.</span> <span class="nav-text">一 自定义属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-获取自定义属性"><span class="nav-number">2.</span> <span class="nav-text">二 获取自定义属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-ShapeImageView之onMeasure"><span class="nav-number">3.</span> <span class="nav-text">三 ShapeImageView之onMeasure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-ShapeImageView之onDraw"><span class="nav-number">4.</span> <span class="nav-text">四 ShapeImageView之onDraw</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五-代码设置自定义属性"><span class="nav-number">5.</span> <span class="nav-text">五 代码设置自定义属性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joker Fu</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-users"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
