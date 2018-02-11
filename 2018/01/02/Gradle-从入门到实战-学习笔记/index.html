@@ -1,14 +1,506 @@
-<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3"><link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222"><meta name="keywords" content="Android,Gradle,"><meta name="description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro"><meta name="keywords" content="Android,Gradle"><meta property="og:type" content="article"><meta property="og:title" content="Gradle 从入门到实战 学习笔记"><meta property="og:url" content="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/index.html"><meta property="og:site_name" content="博格"><meta property="og:description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><meta property="og:updated_time" content="2018-01-02T15:34:10.929Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Gradle 从入门到实战 学习笔记"><meta name="twitter:description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro"><meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.3",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!0,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/"><title>Gradle 从入门到实战 学习笔记 | 博格</title><script type="text/javascript" src="/js/src/love.js"></script></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">博格</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Joker Fu"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.gif"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="博格"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Gradle 从入门到实战 学习笔记</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T22:35:40+08:00">2018-01-02</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span> ， <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/Gradle/" itemprop="url" rel="index"><span itemprop="name">Gradle</span></a></span></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 热度<span class="busuanzi-value" id="busuanzi_value_page_pv"></span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">2,153字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">10分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是<strong>Groovy Language、Gradle DSL、Android DSL</strong> 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源<a href="https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&amp;mid=2649492338&amp;idx=1&amp;sn=49cb619fb057720db505b7c3b8f894e8&amp;chksm=8eec808db99b099b6b0bc5e983fc10df48a085a78ca935593737ec9d76b373188e20cf1042d9#rd" target="_blank" rel="noopener">Gradle从入门到实战 - Groovy基础</a>，学习主要内容如下：</p><ul><li>Groovy基础</li><li>全面理解Gradle</li><li>分析Android的build tools插件</li><li>从0到1完成一款Gradle插件</li></ul><h4 id="一-Groovy基础"><a href="#一-Groovy基础" class="headerlink" title="一 Groovy基础"></a>一 Groovy基础</h4><p>通过def关键字声明变量和方法：<br></p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span>;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">int</span> <span class="title">c</span> </span>= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>() &#123;</span><br><span class="line">    println (<span class="string">"hello world!"</span>);</span><br><span class="line">    return <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>在Groovy中语法中，很多地方可以省略：</p><ul><li>语句后面的分号可以省略</li><li>变量类型可以省略</li><li>方法的参数类型和返回值可以省略</li><li>方法调用括号可以省略</li><li>方法中return关键字也可以省略</li></ul><p>所以上面代码这样写也是正确的：<br></p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span> <span class="comment">//省略分号</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c</span> </span>= <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>() &#123;</span><br><span class="line">    println <span class="string">"hello world!"</span> <span class="comment">//省略调用时括号</span></span><br><span class="line">    <span class="number">1</span> <span class="comment">//省略return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>(String msg)&#123;</span><br><span class="line">    println msg</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int hello(msg)&#123; <span class="comment">//省略参数类型</span></span><br><span class="line">    println (msg)</span><br><span class="line">    return <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int hello(msg)&#123;</span><br><span class="line">    println msg</span><br><span class="line">    return <span class="number">1</span> <span class="comment">// 这个return不能省略</span></span><br><span class="line">    println <span class="string">"done"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p><strong>总结</strong></p><ul><li>在Groovy中，类型是弱化的，所有的类型都可以动态推断，但是Groovy仍然是强类型的语言，类型不匹配仍然会报错</li><li>在Groovy中很多东西都可以省略，所以寻找一种自己喜欢的写法</li><li>Groovy中的注释和Java中相同</li></ul><h4 id="二-Groovy的数据类型"><a href="#二-Groovy的数据类型" class="headerlink" title="二 Groovy的数据类型"></a>二 Groovy的数据类型</h4><p>在Groovy中，数据类型有：</p><ul><li>Java中的基本数据类型</li><li>Java中的对象</li><li>Closure（闭包）</li><li>加强的List、Map等集合类型</li><li>加强的File、Stream等IO类型</li></ul><p>类型可以显示声明，也可以用 def 来声明，用 def 声明的类型Groovy将会进行类型推断</p><ol><li>String</li></ol><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c</span> </span>= <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;"</span></span><br><span class="line"></span><br><span class="line">println c</span><br></pre></td></tr></table></figure><pre><code>outputs:
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,Gradle," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro">
+<meta name="keywords" content="Android,Gradle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle 从入门到实战 学习笔记">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/index.html">
+<meta property="og:site_name" content="博格">
+<meta property="og:description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-01-02T15:34:10.929Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gradle 从入门到实战 学习笔记">
+<meta name="twitter:description" content="Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是Groovy Language、Gradle DSL、Android DSL 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源Gradle从入门到实战 - Gro">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/"/>
+
+
+
+
+
+  <title>Gradle 从入门到实战 学习笔记 | 博格</title>
+  
+
+
+
+
+
+
+
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">博格</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joker Fu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博格">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Gradle 从入门到实战 学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T22:35:40+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Gradle/" itemprop="url" rel="index">
+                    <span itemprop="name">Gradle</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 热度
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,153字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Gradle是目前为止Android的主流构建工具，不管用命令行还是Android Studio来build项目，Gradle都不可或缺。Gradle不单单是一个配置脚本，更是<strong>Groovy Language、Gradle DSL、Android DSL</strong> 3门语言的组合( DSL的全称是Domain Specific Language，即领域特定语言 )。学习来源<a href="https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&amp;mid=2649492338&amp;idx=1&amp;sn=49cb619fb057720db505b7c3b8f894e8&amp;chksm=8eec808db99b099b6b0bc5e983fc10df48a085a78ca935593737ec9d76b373188e20cf1042d9#rd" target="_blank" rel="noopener">Gradle从入门到实战 - Groovy基础</a>，学习主要内容如下：</p>
+<ul>
+<li>Groovy基础</li>
+<li>全面理解Gradle</li>
+<li>分析Android的build tools插件</li>
+<li>从0到1完成一款Gradle插件</li>
+</ul>
+<h4 id="一-Groovy基础"><a href="#一-Groovy基础" class="headerlink" title="一 Groovy基础"></a>一 Groovy基础</h4><p>通过def关键字声明变量和方法：<br><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span>;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">int</span> <span class="title">c</span> </span>= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>() &#123;</span><br><span class="line">    println (<span class="string">"hello world!"</span>);</span><br><span class="line">    return <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Groovy中语法中，很多地方可以省略：</p>
+<ul>
+<li>语句后面的分号可以省略</li>
+<li>变量类型可以省略</li>
+<li>方法的参数类型和返回值可以省略</li>
+<li>方法调用括号可以省略</li>
+<li>方法中return关键字也可以省略</li>
+</ul>
+<p>所以上面代码这样写也是正确的：<br><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span> <span class="comment">//省略分号</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c</span> </span>= <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>() &#123;</span><br><span class="line">    println <span class="string">"hello world!"</span> <span class="comment">//省略调用时括号</span></span><br><span class="line">    <span class="number">1</span> <span class="comment">//省略return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span></span>(String msg)&#123;</span><br><span class="line">    println msg</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int hello(msg)&#123; <span class="comment">//省略参数类型</span></span><br><span class="line">    println (msg)</span><br><span class="line">    return <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int hello(msg)&#123;</span><br><span class="line">    println msg</span><br><span class="line">    return <span class="number">1</span> <span class="comment">// 这个return不能省略</span></span><br><span class="line">    println <span class="string">"done"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>总结</strong></p>
+<ul>
+<li>在Groovy中，类型是弱化的，所有的类型都可以动态推断，但是Groovy仍然是强类型的语言，类型不匹配仍然会报错</li>
+<li>在Groovy中很多东西都可以省略，所以寻找一种自己喜欢的写法</li>
+<li>Groovy中的注释和Java中相同</li>
+</ul>
+<h4 id="二-Groovy的数据类型"><a href="#二-Groovy的数据类型" class="headerlink" title="二 Groovy的数据类型"></a>二 Groovy的数据类型</h4><p>在Groovy中，数据类型有：</p>
+<ul>
+<li>Java中的基本数据类型</li>
+<li>Java中的对象</li>
+<li>Closure（闭包）</li>
+<li>加强的List、Map等集合类型</li>
+<li>加强的File、Stream等IO类型</li>
+</ul>
+<p>类型可以显示声明，也可以用 def 来声明，用 def 声明的类型Groovy将会进行类型推断</p>
+<ol>
+<li>String</li>
+</ol>
+<figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">a</span> </span>= <span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">b</span> </span>= <span class="string">"hello"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c</span> </span>= <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;"</span></span><br><span class="line"></span><br><span class="line">println c</span><br></pre></td></tr></table></figure>
+<pre><code>outputs:
 a = 1, b = hello
-</code></pre><ol><li>闭包(Closure)<br>闭包在很多语言都存在，类似于C语言的指针。闭包作为一种特殊的数据类型而存在，闭包可以作为方法的参数和返回值，也可以作为一个变量</li></ol><p>声明闭包：<br></p><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  parameters -&gt;</span><br><span class="line">  <span class="keyword">code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p>闭包可以有返回和参数，也可以没有。看看以下例子：<br></p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">closure</span> </span>= &#123; int a, String b -&gt;</span><br><span class="line">  println <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= &#123; a, b -&gt;</span><br><span class="line">  println <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span> </span>= &#123; a, b -&gt;</span><br><span class="line">  a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里省略了闭包的参数类型</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testIt</span> </span>= &#123;</span><br><span class="line">  println <span class="string">"find $&#123;it&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">closure(<span class="number">100</span>, <span class="number">200</span>)</span><br><span class="line">test.call(<span class="number">100</span>, <span class="string">"test"</span>)</span><br><span class="line">println sum(<span class="number">100</span>, <span class="number">200</span>)</span><br><span class="line">testIt(<span class="number">100</span>)</span><br></pre></td></tr></table></figure><p></p><p>闭包不指定参数，那么会隐含一个参数it,闭包可以当做函数一样使用，上例将得到以下输出：<br></p><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span> = <span class="number">100</span>, <span class="selector-tag">b</span> = <span class="number">200</span>, This is <span class="selector-tag">a</span> Closure!</span><br><span class="line"><span class="selector-tag">a</span> = <span class="number">100</span>, <span class="selector-tag">b</span> = test, This is <span class="selector-tag">a</span> Closure!</span><br><span class="line"><span class="number">300</span></span><br><span class="line">find <span class="number">100</span>, This is <span class="selector-tag">a</span> Closure!</span><br></pre></td></tr></table></figure><p></p><p>闭包的一个难题是如何确定闭包的参数，尤其当我们调用Groovy的API时，这个时候没有其他办法，只有查询Groovy的文档：<br><a href="http://www.groovy-lang.org/api.html" target="_blank" rel="noopener">http://www.groovy-lang.org/api.html</a><br><a href="http://docs.groovy-lang.org/latest/html/groovy-jdk/index-all.html" target="_blank" rel="noopener">http://docs.groovy-lang.org/latest/html/groovy-jdk/index-all.html</a></p><ol><li>List和Map</li></ol><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> emptyList = []</span><br><span class="line"><span class="keyword">def</span> test = [<span class="number">100</span>, <span class="string">"hello"</span>, <span class="keyword">true</span>]</span><br><span class="line">test[<span class="number">1</span>] = <span class="string">"world"</span></span><br><span class="line">test &lt;&lt; <span class="number">200</span></span><br><span class="line"><span class="keyword">println</span> test.<span class="keyword">size</span></span><br><span class="line"><span class="keyword">println</span> test[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">1</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">2</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">3</span>]</span><br></pre></td></tr></table></figure><pre><code>outputs:
+</code></pre><ol>
+<li>闭包(Closure)<br>闭包在很多语言都存在，类似于C语言的指针。闭包作为一种特殊的数据类型而存在，闭包可以作为方法的参数和返回值，也可以作为一个变量</li>
+</ol>
+<p>声明闭包：<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  parameters -&gt;</span><br><span class="line">  <span class="keyword">code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>闭包可以有返回和参数，也可以没有。看看以下例子：<br><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">closure</span> </span>= &#123; int a, String b -&gt;</span><br><span class="line">  println <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= &#123; a, b -&gt;</span><br><span class="line">  println <span class="string">"a = $&#123;a&#125;, b = $&#123;b&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span> </span>= &#123; a, b -&gt;</span><br><span class="line">  a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里省略了闭包的参数类型</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testIt</span> </span>= &#123;</span><br><span class="line">  println <span class="string">"find $&#123;it&#125;, This is a Closure!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">closure(<span class="number">100</span>, <span class="number">200</span>)</span><br><span class="line">test.call(<span class="number">100</span>, <span class="string">"test"</span>)</span><br><span class="line">println sum(<span class="number">100</span>, <span class="number">200</span>)</span><br><span class="line">testIt(<span class="number">100</span>)</span><br></pre></td></tr></table></figure></p>
+<p>闭包不指定参数，那么会隐含一个参数it,闭包可以当做函数一样使用，上例将得到以下输出：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span> = <span class="number">100</span>, <span class="selector-tag">b</span> = <span class="number">200</span>, This is <span class="selector-tag">a</span> Closure!</span><br><span class="line"><span class="selector-tag">a</span> = <span class="number">100</span>, <span class="selector-tag">b</span> = test, This is <span class="selector-tag">a</span> Closure!</span><br><span class="line"><span class="number">300</span></span><br><span class="line">find <span class="number">100</span>, This is <span class="selector-tag">a</span> Closure!</span><br></pre></td></tr></table></figure></p>
+<p>闭包的一个难题是如何确定闭包的参数，尤其当我们调用Groovy的API时，这个时候没有其他办法，只有查询Groovy的文档：<br><a href="http://www.groovy-lang.org/api.html" target="_blank" rel="noopener">http://www.groovy-lang.org/api.html</a><br><a href="http://docs.groovy-lang.org/latest/html/groovy-jdk/index-all.html" target="_blank" rel="noopener">http://docs.groovy-lang.org/latest/html/groovy-jdk/index-all.html</a></p>
+<ol>
+<li>List和Map</li>
+</ol>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> emptyList = []</span><br><span class="line"><span class="keyword">def</span> test = [<span class="number">100</span>, <span class="string">"hello"</span>, <span class="keyword">true</span>]</span><br><span class="line">test[<span class="number">1</span>] = <span class="string">"world"</span></span><br><span class="line">test &lt;&lt; <span class="number">200</span></span><br><span class="line"><span class="keyword">println</span> test.<span class="keyword">size</span></span><br><span class="line"><span class="keyword">println</span> test[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">1</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">2</span>]</span><br><span class="line"><span class="keyword">println</span> test[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>outputs:
   100
   world
   true
   200
-</code></pre><p>上例中操作符&lt;&lt;，表示向List中新增加元素<br></p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">emptyMap</span> </span>= [:]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= [<span class="string">"id"</span>:<span class="number">1</span>, <span class="string">"name"</span>:<span class="string">"test"</span>, <span class="string">"isMale"</span>:<span class="literal">true</span>]</span><br><span class="line">test[<span class="string">"id"</span>] = <span class="number">2</span></span><br><span class="line">test.id = <span class="number">900</span></span><br><span class="line">println test.id</span><br><span class="line">println test.isMale</span><br></pre></td></tr></table></figure><p></p><pre><code>outputs:
+</code></pre><p>上例中操作符&lt;&lt;，表示向List中新增加元素<br><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">emptyMap</span> </span>= [:]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= [<span class="string">"id"</span>:<span class="number">1</span>, <span class="string">"name"</span>:<span class="string">"test"</span>, <span class="string">"isMale"</span>:<span class="literal">true</span>]</span><br><span class="line">test[<span class="string">"id"</span>] = <span class="number">2</span></span><br><span class="line">test.id = <span class="number">900</span></span><br><span class="line">println test.id</span><br><span class="line">println test.isMale</span><br></pre></td></tr></table></figure></p>
+<pre><code>outputs:
   900
   true
-</code></pre><p>通过闭包对Map进行遍历，如果闭包传递2个参数就是遍历key，value；如果不传参就是遍历entry：<br></p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">emptyMap</span> </span>= [:]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= [<span class="string">"id"</span>:<span class="number">1</span>, <span class="string">"name"</span>:<span class="string">"test"</span>, <span class="string">"isMale"</span>:<span class="literal">true</span>]</span><br><span class="line">test.each&#123; key, value -&gt;</span><br><span class="line">  println <span class="string">"two params, key = $&#123;key&#125;, value = $&#123;value&#125;"</span></span><br><span class="line">&#125;</span><br><span class="line">test.each&#123;</span><br><span class="line">  println <span class="string">"one param, key = $&#123;it.key&#125;, value = $&#123;it.value&#125;"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><ol><li>文件I/O<br>Groovy在使用I / O时提供了许多辅助方法，让文件操作比java中简单很多。下面举例，具体使用请查阅API：</li></ol><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="keyword">file</span> = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="string">"E:/Example.txt"</span>)</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">file</span>.<span class="keyword">eachLine</span>&#123; line -&gt;  <span class="comment">//一行一行读取文件</span></span><br><span class="line">  <span class="keyword">println</span> <span class="string">"read line: $line"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">file</span>.<span class="keyword">eachLine</span>&#123; line, lineNum -&gt; </span><br><span class="line">  <span class="keyword">println</span> <span class="string">"read  line $&#123;lineNum&#125;: $line"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">println</span> <span class="keyword">file</span>.text <span class="comment">//将文本以字符串读取</span></span><br></pre></td></tr></table></figure><pre><code>outputs:
+</code></pre><p>通过闭包对Map进行遍历，如果闭包传递2个参数就是遍历key，value；如果不传参就是遍历entry：<br><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">emptyMap</span> </span>= [:]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span> </span>= [<span class="string">"id"</span>:<span class="number">1</span>, <span class="string">"name"</span>:<span class="string">"test"</span>, <span class="string">"isMale"</span>:<span class="literal">true</span>]</span><br><span class="line">test.each&#123; key, value -&gt;</span><br><span class="line">  println <span class="string">"two params, key = $&#123;key&#125;, value = $&#123;value&#125;"</span></span><br><span class="line">&#125;</span><br><span class="line">test.each&#123;</span><br><span class="line">  println <span class="string">"one param, key = $&#123;it.key&#125;, value = $&#123;it.value&#125;"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>文件I/O<br>Groovy在使用I / O时提供了许多辅助方法，让文件操作比java中简单很多。下面举例，具体使用请查阅API：</li>
+</ol>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="keyword">file</span> = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="string">"E:/Example.txt"</span>)</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">file</span>.<span class="keyword">eachLine</span>&#123; line -&gt;  <span class="comment">//一行一行读取文件</span></span><br><span class="line">  <span class="keyword">println</span> <span class="string">"read line: $line"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">file</span>.<span class="keyword">eachLine</span>&#123; line, lineNum -&gt; </span><br><span class="line">  <span class="keyword">println</span> <span class="string">"read  line $&#123;lineNum&#125;: $line"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">println</span> <span class="string">"-------------------------------"</span></span><br><span class="line"><span class="keyword">println</span> <span class="keyword">file</span>.text <span class="comment">//将文本以字符串读取</span></span><br></pre></td></tr></table></figure>
+<pre><code>outputs:
   -------------------------------
   read line: hello
   read line: 你好
@@ -18,4 +510,835 @@ a = 1, b = hello
   -------------------------------
   hello
   你好
-</code></pre><p>接下来看看xml文件访问，也是比Java中简单多了<br>Groovy访问xml有两个类：XmlParser和XmlSlurper，二者几乎一样，在性能上有细微的差别，具体的也请查看具体API。接下来看看示例，首先假设我们有attrs.xml文件：<br></p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"CircleView"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_color"</span> <span class="attr">format</span>=<span class="string">"color"</span>&gt;</span>#98ff02<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_size"</span> <span class="attr">format</span>=<span class="string">"integer"</span>&gt;</span>100<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_title"</span> <span class="attr">format</span>=<span class="string">"string"</span>&gt;</span>xml<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure><p></p><p>对xml文件操作<br></p><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def xml = <span class="keyword">new</span> XmlParser().parse(<span class="keyword">new</span> <span class="built_in">File</span>(<span class="string">"attrs.xml"</span>))</span><br><span class="line"><span class="comment">// 访问declare-styleable节点的name属性</span></span><br><span class="line"><span class="built_in">println</span> xml[<span class="string">'declare-styleable'</span>].@name[<span class="number">0</span>]</span><br><span class="line"><span class="comment">// 访问declare-styleable的第三个子节点的内容</span></span><br><span class="line"><span class="built_in">println</span> xml[<span class="string">'declare-styleable'</span>].attr[<span class="number">2</span>].<span class="built_in">text</span>()</span><br></pre></td></tr></table></figure><p></p><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">outputs：</span><br><span class="line">CircleView</span><br><span class="line"><span class="built_in">xml</span></span><br></pre></td></tr></table></figure><h4 id="三-Groovy的其他特性"><a href="#三-Groovy的其他特性" class="headerlink" title="三 Groovy的其他特性"></a>三 Groovy的其他特性</h4><ol><li><p>在Groovy中，如在任何其他面向对象语言中一样，存在类和对象的概念以表示编程语言的对象定向性质。</p><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  int id</span><br><span class="line">  String Name</span><br><span class="line">	</span><br><span class="line">  static void main(String[] args) &#123;</span><br><span class="line">    Student st = new Student();</span><br><span class="line">    st.id= <span class="number">1</span></span><br><span class="line">    st.Name= <span class="string">"Joe"</span>    </span><br><span class="line">    <span class="function"><span class="title">fun</span><span class="params">(Student .<span class="keyword">class</span>)</span></span> <span class="comment">//参数为class类型，可省略.class后缀 </span></span><br><span class="line">    <span class="function"><span class="title">fun</span><span class="params">(Student)</span></span>  <span class="comment">//省略.class后缀 </span></span><br><span class="line"> &#125; </span><br><span class="line"></span><br><span class="line">  def func(Class clazz) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>在java中使用private关键字隐藏实例成员，而是提供getter和setter方法来相应地设置和获取实例变量的值。Groovy也是一样，不一样的是Groovy中只要有属性就有getter&amp;setter，有getter&amp;setter就有隐含的属性。所以以下两个类是一样的</p><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Student</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id</span><br><span class="line">	</span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">setId</span>(<span class="params"><span class="keyword">int</span> id</span>) </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.id = id</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">getId</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.id</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Student</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>在Groovy中，当对同一个对象进行操作时，可以使用with操作符，比如：</p><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> id</span><br><span class="line">  <span class="built_in">String</span> name</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">   Student st = <span class="keyword">new</span> Student();</span><br><span class="line">   st.id= <span class="number">1</span></span><br><span class="line">   st.name= <span class="string">"Joe"</span>    </span><br><span class="line">  <span class="comment">//以上操作可以简化为</span></span><br><span class="line">  st.<span class="keyword">with</span>&#123;</span><br><span class="line">    id = <span class="number">1</span></span><br><span class="line">    name = <span class="string">"Joe"</span></span><br><span class="line">  &#125;</span><br><span class="line"> &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>在Groovy中，判断是否为真可以更简洁：</p><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">name</span> != null &amp;&amp; <span class="keyword">name</span>.length &gt; <span class="number">0</span>) <span class="comment">&#123;&#125;</span></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">name</span>) <span class="comment">&#123;&#125;</span></span><br></pre></td></tr></table></figure></li><li><p>在Groovy中，更加简洁的三目运算：</p><figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">name</span> </span>= <span class="string">"name"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result</span> </span>= name != null ? name : <span class="string">"test"</span></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result</span> </span>= name ? : <span class="string">"test"</span></span><br></pre></td></tr></table></figure></li><li><p>非空判断</p><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">order</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">order</span>.getCustomer() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">order</span>.getCustomer().getAddress() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="keyword">order</span>.getCustomer().getAddress());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line">println <span class="keyword">order</span>?.customer?.address</span><br></pre></td></tr></table></figure></li><li><p>equals和==，Groovy中==与Java中equals一致，如果需要判断是否为同一对象需要使用.is()</p><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Object <span class="selector-tag">a</span> = new Object()</span><br><span class="line">Object <span class="selector-tag">b</span> = <span class="selector-tag">a</span>.clone()</span><br><span class="line"></span><br><span class="line">assert <span class="selector-tag">a</span> == <span class="selector-tag">b</span> <span class="comment">//判断相等</span></span><br><span class="line">assert !<span class="selector-tag">a</span>.is(b)  <span class="comment">//判断是否是同一对象</span></span><br></pre></td></tr></table></figure></li><li><p>断言关键字assert的使用</p><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def check(String <span class="built_in">name</span>) &#123;</span><br><span class="line">    <span class="built_in">assert</span> <span class="built_in">name</span></span><br><span class="line">    <span class="built_in">assert</span> <span class="built_in">name</span>?.<span class="built_in">size</span>() &gt; <span class="number">3</span> <span class="comment">//如果断言结果为false将抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>在Groovy中，switch方法更加灵活，可以同时支持更多的参数类型</p><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">在<span class="type">Groovy</span>中，switch方法变得更加灵活，可以同时支持更多的参数类型：</span><br><span class="line">def x = <span class="number">1</span>.<span class="number">23</span></span><br><span class="line">def <span class="literal">result</span> = <span class="string">""</span></span><br><span class="line">switch (x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"foo"</span>: <span class="literal">result</span> = <span class="string">"found foo"</span></span><br><span class="line">    // lets fall through</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"bar"</span>: <span class="literal">result</span> += <span class="string">"bar"</span></span><br><span class="line">    <span class="keyword">case</span> [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, 'inList']: <span class="literal">result</span> = <span class="string">"list"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="number">12</span>..<span class="number">30</span>: <span class="literal">result</span> = <span class="string">"range"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Integer</span>: <span class="literal">result</span> = <span class="string">"integer"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Number</span>: <span class="literal">result</span> = <span class="string">"number"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> &#123; it &gt; <span class="number">3</span> &#125;: <span class="literal">result</span> = <span class="string">"number &gt; 3"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    default: <span class="literal">result</span> = <span class="string">"default"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">assert <span class="literal">result</span> == <span class="string">"number"</span></span><br></pre></td></tr></table></figure></li></ol><h4 id="四-编译并运行Groovy"><a href="#四-编译并运行Groovy" class="headerlink" title="四 编译并运行Groovy"></a>四 编译并运行Groovy</h4><p>我们可以通过下载和安装Groovy sdk来编译和运行，但是我们是为了学习Gradle，所以这里不用搞得过于复杂。推荐如下操作来编译和运行Groovy：</p><ol><li>首先在任意文件夹创建build.gradle</li><li>在build.gradle中创建一个task</li><li>使用gradle test命令编译和运行</li></ol><p>拿上面的一个例子（可能需要配置环境变量，请自行百度，其实和Java环境变量配置方法一致），来做一个完整示例：</p><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span>(test).<span class="keyword">doLast</span> &#123;</span><br><span class="line">    <span class="keyword">println</span> <span class="string">"start execute test"</span></span><br><span class="line">    doTest()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> doTest() &#123;</span><br><span class="line">	<span class="keyword">def</span> emptyList = []</span><br><span class="line">	<span class="keyword">def</span> test = [<span class="number">100</span>, <span class="string">"hello"</span>, <span class="keyword">true</span>]</span><br><span class="line">	test[<span class="number">1</span>] = <span class="string">"world"</span></span><br><span class="line">	test &lt;&lt; <span class="number">200</span></span><br><span class="line">	<span class="keyword">println</span> <span class="string">"以下是输出内容"</span></span><br><span class="line">	<span class="keyword">println</span> test.<span class="keyword">size</span></span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">0</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">1</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">2</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">3</span>]</span><br><span class="line">	<span class="keyword">println</span> <span class="string">"--------------"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>直接附上cmd命令行编译运行结果截图：</p><p><img src="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="具体操作.png"></p><p>再次感谢：任玉刚 - <a href="https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&amp;mid=2649492338&amp;idx=1&amp;sn=49cb619fb057720db505b7c3b8f894e8&amp;chksm=8eec808db99b099b6b0bc5e983fc10df48a085a78ca935593737ec9d76b373188e20cf1042d9#rd" target="_blank" rel="noopener">Gradle从入门到实战</a></p></div><div><div><div style="text-align:center;color:#ccc;font-size:14px"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div></div></div><div><div class="my_post_copyright"><script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script><script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><p><span>本文标题:</span><a href="/2018/01/02/Gradle-从入门到实战-学习笔记/">Gradle 从入门到实战 学习笔记</a></p><p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p><p><span>发布时间:</span>2018年01月02日 - 22:01</p><p><span>最后更新:</span>2018年01月02日 - 23:01</p><p><span>原始链接:</span><a href="/2018/01/02/Gradle-从入门到实战-学习笔记/" title="Gradle 从入门到实战 学习笔记">http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/</a><span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/" aria-label="复制成功！"></i></span></p><p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p></div><script>var clipboard=new Clipboard(".fa-clipboard");$(".fa-clipboard").click(function(){clipboard.on("success",function(){swal({title:"",text:"复制成功",icon:"success",showConfirmButton:!0})})})</script></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a><a href="/tags/Gradle/" rel="tag"><i class="fa fa-tag"></i> Gradle</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/01/02/Android-7-0权限适配：FileUriExposedException异常/" rel="next" title="Android 7.0权限适配：FileUriExposedException异常"><i class="fa fa-chevron-left"></i> Android 7.0权限适配：FileUriExposedException异常</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/01/02/Android的线程池与队列/" rel="prev" title="Android的线程池与队列">Android的线程池与队列<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="Joker Fu"><p class="site-author-name" itemprop="name">Joker Fu</p><p class="site-description motion-element" itemprop="description">博格，水滴石穿</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">25</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">12</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">12</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-Groovy基础"><span class="nav-number">1.</span> <span class="nav-text">一 Groovy基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-Groovy的数据类型"><span class="nav-number">2.</span> <span class="nav-text">二 Groovy的数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-Groovy的其他特性"><span class="nav-number">3.</span> <span class="nav-text">三 Groovy的其他特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-编译并运行Groovy"><span class="nav-number">4.</span> <span class="nav-text">四 编译并运行Groovy</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">Joker Fu</span></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-users"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人</span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><script type="text/javascript">!function(e,t){var c,n=e.getElementsByTagName("script")[0];"function"!=typeof LivereTower&&((c=e.createElement("script")).src="https://cdn-city.livere.com/js/embed.dist.js",c.async=!0,n.parentNode.insertBefore(c,n))}(document)</script><script type="text/javascript">var isfetched=!1,isXml=!0,search_path="search.xml";0===search_path.length?search_path="search.xml":/json$/i.test(search_path)&&(isXml=!1);var path="/"+search_path,onPopupClose=function(t){$(".popup").hide(),$("#local-search-input").val(""),$(".search-result-list").remove(),$("#no-result").remove(),$(".local-search-pop-overlay").remove(),$("body").css("overflow","")};function proceedsearch(){$("body").append('<div class="search-popup-overlay local-search-pop-overlay"></div>').css("overflow","hidden"),$(".search-popup-overlay").click(onPopupClose),$(".popup").toggle();var t=$("#local-search-input");t.attr("autocapitalize","none"),t.attr("autocorrect","off"),t.focus()}var searchFunc=function(t,e,o){"use strict";$("body").append('<div class="search-popup-overlay local-search-pop-overlay"><div id="search-loading-icon"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div></div>').css("overflow","hidden"),$("#search-loading-icon").css("margin","20% auto 0 auto").css("text-align","center"),$.ajax({url:t,dataType:isXml?"xml":"json",async:!0,success:function(t){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var n=isXml?$("entry",t).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get():t,r=document.getElementById(e),s=document.getElementById(o),a=function(){var t=r.value.trim().toLowerCase(),e=t.split(/[\s\-]+/);e.length>1&&e.push(t);var o=[];if(t.length>0&&n.forEach(function(n){var r=!1,s=0,a=0,i=n.title.trim(),c=i.toLowerCase(),l=n.content.trim().replace(/<[^>]+>/g,""),h=l.toLowerCase(),p=decodeURIComponent(n.url),u=[],f=[];if(""!=i&&(e.forEach(function(t){function e(t,e,o){var n=t.length;if(0===n)return[];var r=0,s=[],a=[];for(o||(e=e.toLowerCase(),t=t.toLowerCase());(s=e.indexOf(t,r))>-1;)a.push({position:s,word:t}),r=s+n;return a}u=u.concat(e(t,c,!1)),f=f.concat(e(t,h,!1))}),(u.length>0||f.length>0)&&(r=!0,s=u.length+f.length)),r){[u,f].forEach(function(t){t.sort(function(t,e){return e.position!==t.position?e.position-t.position:t.word.length-e.word.length})});function d(e,o,n,r){for(var s=r[r.length-1],i=s.position,c=s.word,l=[],h=0;i+c.length<=n&&0!=r.length;){c===t&&h++,l.push({position:i,length:c.length});var p=i+c.length;for(r.pop();0!=r.length&&(i=(s=r[r.length-1]).position,c=s.word,p>i);)r.pop()}return a+=h,{hits:l,start:o,end:n,searchTextCount:h}}var g=[];0!=u.length&&g.push(d(0,0,i.length,u));for(var v=[];0!=f.length;){var $=f[f.length-1],C=$.position,m=$.word,x=C-20,w=C+80;x<0&&(x=0),w<C+m.length&&(w=C+m.length),w>l.length&&(w=l.length),v.push(d(0,x,w,f))}v.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hits.length!==e.hits.length?e.hits.length-t.hits.length:t.start-e.start});var y=parseInt("1");y>=0&&(v=v.slice(0,y));function T(t,e){var o="",n=e.start;return e.hits.forEach(function(e){o+=t.substring(n,e.position);var r=e.position+e.length;o+='<b class="search-keyword">'+t.substring(e.position,r)+"</b>",n=r}),o+=t.substring(n,e.end)}var b="";0!=g.length?b+="<li><a href='"+p+"' class='search-result-title'>"+T(i,g[0])+"</a>":b+="<li><a href='"+p+"' class='search-result-title'>"+i+"</a>",v.forEach(function(t){b+="<a href='"+p+'\'><p class="search-result">'+T(l,t)+"...</p></a>"}),b+="</li>",o.push({item:b,searchTextCount:a,hitCount:s,id:o.length})}}),1===e.length&&""===e[0])s.innerHTML='<div id="no-result"><i class="fa fa-search fa-5x" /></div>';else if(0===o.length)s.innerHTML='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>';else{o.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hitCount!==e.hitCount?e.hitCount-t.hitCount:e.id-t.id});var a='<ul class="search-result-list">';o.forEach(function(t){a+=t.item}),a+="</ul>",s.innerHTML=a}};r.addEventListener("input",a),$(".local-search-pop-overlay").remove(),$("body").css("overflow",""),proceedsearch()}})};$(".popup-trigger").click(function(t){t.stopPropagation(),!1===isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(onPopupClose),$(".popup").click(function(t){t.stopPropagation()}),$(document).on("keyup",function(t){27===t.which&&$(".search-popup").is(":visible")&&onPopupClose()})</script></body></html>
+</code></pre><p>接下来看看xml文件访问，也是比Java中简单多了<br>Groovy访问xml有两个类：XmlParser和XmlSlurper，二者几乎一样，在性能上有细微的差别，具体的也请查看具体API。接下来看看示例，首先假设我们有attrs.xml文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"CircleView"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_color"</span> <span class="attr">format</span>=<span class="string">"color"</span>&gt;</span>#98ff02<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_size"</span> <span class="attr">format</span>=<span class="string">"integer"</span>&gt;</span>100<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"circle_title"</span> <span class="attr">format</span>=<span class="string">"string"</span>&gt;</span>xml<span class="tag">&lt;/<span class="name">attr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>对xml文件操作<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def xml = <span class="keyword">new</span> XmlParser().parse(<span class="keyword">new</span> <span class="built_in">File</span>(<span class="string">"attrs.xml"</span>))</span><br><span class="line"><span class="comment">// 访问declare-styleable节点的name属性</span></span><br><span class="line"><span class="built_in">println</span> xml[<span class="string">'declare-styleable'</span>].@name[<span class="number">0</span>]</span><br><span class="line"><span class="comment">// 访问declare-styleable的第三个子节点的内容</span></span><br><span class="line"><span class="built_in">println</span> xml[<span class="string">'declare-styleable'</span>].attr[<span class="number">2</span>].<span class="built_in">text</span>()</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">outputs：</span><br><span class="line">CircleView</span><br><span class="line"><span class="built_in">xml</span></span><br></pre></td></tr></table></figure>
+<h4 id="三-Groovy的其他特性"><a href="#三-Groovy的其他特性" class="headerlink" title="三 Groovy的其他特性"></a>三 Groovy的其他特性</h4><ol>
+<li><p>在Groovy中，如在任何其他面向对象语言中一样，存在类和对象的概念以表示编程语言的对象定向性质。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  int id</span><br><span class="line">  String Name</span><br><span class="line">	</span><br><span class="line">  static void main(String[] args) &#123;</span><br><span class="line">    Student st = new Student();</span><br><span class="line">    st.id= <span class="number">1</span></span><br><span class="line">    st.Name= <span class="string">"Joe"</span>    </span><br><span class="line">    <span class="function"><span class="title">fun</span><span class="params">(Student .<span class="keyword">class</span>)</span></span> <span class="comment">//参数为class类型，可省略.class后缀 </span></span><br><span class="line">    <span class="function"><span class="title">fun</span><span class="params">(Student)</span></span>  <span class="comment">//省略.class后缀 </span></span><br><span class="line"> &#125; </span><br><span class="line"></span><br><span class="line">  def func(Class clazz) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在java中使用private关键字隐藏实例成员，而是提供getter和setter方法来相应地设置和获取实例变量的值。Groovy也是一样，不一样的是Groovy中只要有属性就有getter&amp;setter，有getter&amp;setter就有隐含的属性。所以以下两个类是一样的</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Student</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id</span><br><span class="line">	</span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">setId</span>(<span class="params"><span class="keyword">int</span> id</span>) </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.id = id</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">getId</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.id</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Student</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Groovy中，当对同一个对象进行操作时，可以使用with操作符，比如：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> id</span><br><span class="line">  <span class="built_in">String</span> name</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">   Student st = <span class="keyword">new</span> Student();</span><br><span class="line">   st.id= <span class="number">1</span></span><br><span class="line">   st.name= <span class="string">"Joe"</span>    </span><br><span class="line">  <span class="comment">//以上操作可以简化为</span></span><br><span class="line">  st.<span class="keyword">with</span>&#123;</span><br><span class="line">    id = <span class="number">1</span></span><br><span class="line">    name = <span class="string">"Joe"</span></span><br><span class="line">  &#125;</span><br><span class="line"> &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Groovy中，判断是否为真可以更简洁：</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">name</span> != null &amp;&amp; <span class="keyword">name</span>.length &gt; <span class="number">0</span>) <span class="comment">&#123;&#125;</span></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">name</span>) <span class="comment">&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Groovy中，更加简洁的三目运算：</p>
+<figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">name</span> </span>= <span class="string">"name"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result</span> </span>= name != null ? name : <span class="string">"test"</span></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result</span> </span>= name ? : <span class="string">"test"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>非空判断</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">order</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">order</span>.getCustomer() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">order</span>.getCustomer().getAddress() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="keyword">order</span>.getCustomer().getAddress());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Groovy中简写</span></span><br><span class="line">println <span class="keyword">order</span>?.customer?.address</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>equals和==，Groovy中==与Java中equals一致，如果需要判断是否为同一对象需要使用.is()</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Object <span class="selector-tag">a</span> = new Object()</span><br><span class="line">Object <span class="selector-tag">b</span> = <span class="selector-tag">a</span>.clone()</span><br><span class="line"></span><br><span class="line">assert <span class="selector-tag">a</span> == <span class="selector-tag">b</span> <span class="comment">//判断相等</span></span><br><span class="line">assert !<span class="selector-tag">a</span>.is(b)  <span class="comment">//判断是否是同一对象</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>断言关键字assert的使用</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def check(String <span class="built_in">name</span>) &#123;</span><br><span class="line">    <span class="built_in">assert</span> <span class="built_in">name</span></span><br><span class="line">    <span class="built_in">assert</span> <span class="built_in">name</span>?.<span class="built_in">size</span>() &gt; <span class="number">3</span> <span class="comment">//如果断言结果为false将抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Groovy中，switch方法更加灵活，可以同时支持更多的参数类型</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">在<span class="type">Groovy</span>中，switch方法变得更加灵活，可以同时支持更多的参数类型：</span><br><span class="line">def x = <span class="number">1</span>.<span class="number">23</span></span><br><span class="line">def <span class="literal">result</span> = <span class="string">""</span></span><br><span class="line">switch (x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"foo"</span>: <span class="literal">result</span> = <span class="string">"found foo"</span></span><br><span class="line">    // lets fall through</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"bar"</span>: <span class="literal">result</span> += <span class="string">"bar"</span></span><br><span class="line">    <span class="keyword">case</span> [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, 'inList']: <span class="literal">result</span> = <span class="string">"list"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="number">12</span>..<span class="number">30</span>: <span class="literal">result</span> = <span class="string">"range"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Integer</span>: <span class="literal">result</span> = <span class="string">"integer"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Number</span>: <span class="literal">result</span> = <span class="string">"number"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">case</span> &#123; it &gt; <span class="number">3</span> &#125;: <span class="literal">result</span> = <span class="string">"number &gt; 3"</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">    default: <span class="literal">result</span> = <span class="string">"default"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">assert <span class="literal">result</span> == <span class="string">"number"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="四-编译并运行Groovy"><a href="#四-编译并运行Groovy" class="headerlink" title="四 编译并运行Groovy"></a>四 编译并运行Groovy</h4><p>我们可以通过下载和安装Groovy sdk来编译和运行，但是我们是为了学习Gradle，所以这里不用搞得过于复杂。推荐如下操作来编译和运行Groovy：</p>
+<ol>
+<li>首先在任意文件夹创建build.gradle</li>
+<li>在build.gradle中创建一个task</li>
+<li>使用gradle test命令编译和运行</li>
+</ol>
+<p>拿上面的一个例子（可能需要配置环境变量，请自行百度，其实和Java环境变量配置方法一致），来做一个完整示例：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span>(test).<span class="keyword">doLast</span> &#123;</span><br><span class="line">    <span class="keyword">println</span> <span class="string">"start execute test"</span></span><br><span class="line">    doTest()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">def</span> doTest() &#123;</span><br><span class="line">	<span class="keyword">def</span> emptyList = []</span><br><span class="line">	<span class="keyword">def</span> test = [<span class="number">100</span>, <span class="string">"hello"</span>, <span class="keyword">true</span>]</span><br><span class="line">	test[<span class="number">1</span>] = <span class="string">"world"</span></span><br><span class="line">	test &lt;&lt; <span class="number">200</span></span><br><span class="line">	<span class="keyword">println</span> <span class="string">"以下是输出内容"</span></span><br><span class="line">	<span class="keyword">println</span> test.<span class="keyword">size</span></span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">0</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">1</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">2</span>]</span><br><span class="line">	<span class="keyword">println</span> test[<span class="number">3</span>]</span><br><span class="line">	<span class="keyword">println</span> <span class="string">"--------------"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接附上cmd命令行编译运行结果截图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6865060-efe5189ac88f9b7c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="具体操作.png"></p>
+<p>再次感谢：任玉刚 - <a href="https://mp.weixin.qq.com/s?__biz=MzIwMTAzMTMxMg==&amp;mid=2649492338&amp;idx=1&amp;sn=49cb619fb057720db505b7c3b8f894e8&amp;chksm=8eec808db99b099b6b0bc5e983fc10df48a085a78ca935593737ec9d76b373188e20cf1042d9#rd" target="_blank" rel="noopener">Gradle从入门到实战</a></p>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div>
+    
+</div>
+
+		
+	</div>
+
+	<div>
+		
+			
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/01/02/Gradle-从入门到实战-学习笔记/">Gradle 从入门到实战 学习笔记</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p>
+  <p><span>发布时间:</span>2018年01月02日 - 22:01</p>
+  <p><span>最后更新:</span>2018年01月02日 - 23:01</p>
+  <p><span>原始链接:</span><a href="/2018/01/02/Gradle-从入门到实战-学习笔记/" title="Gradle 从入门到实战 学习笔记">http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/02/Gradle-从入门到实战-学习笔记/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+		
+	</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+            <a href="/tags/Gradle/" rel="tag"><i class="fa fa-tag"></i> Gradle</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/Android-7-0权限适配：FileUriExposedException异常/" rel="next" title="Android 7.0权限适配：FileUriExposedException异常">
+                <i class="fa fa-chevron-left"></i> Android 7.0权限适配：FileUriExposedException异常
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/02/Android的线程池与队列/" rel="prev" title="Android的线程池与队列">
+                Android的线程池与队列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Joker Fu" />
+            
+              <p class="site-author-name" itemprop="name">Joker Fu</p>
+              <p class="site-description motion-element" itemprop="description">博格，水滴石穿</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-Groovy基础"><span class="nav-number">1.</span> <span class="nav-text">一 Groovy基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-Groovy的数据类型"><span class="nav-number">2.</span> <span class="nav-text">二 Groovy的数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-Groovy的其他特性"><span class="nav-number">3.</span> <span class="nav-text">三 Groovy的其他特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-编译并运行Groovy"><span class="nav-number">4.</span> <span class="nav-text">四 编译并运行Groovy</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joker Fu</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-users"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,4 +1,478 @@
-<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3"><link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222"><meta name="keywords" content="Android,"><meta name="description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr"><meta name="keywords" content="Android"><meta property="og:type" content="article"><meta property="og:title" content="Android的线程池与队列"><meta property="og:url" content="http://yoursite.com/2018/01/02/Android的线程池与队列/index.html"><meta property="og:site_name" content="博格"><meta property="og:description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr"><meta property="og:locale" content="zh-Hans"><meta property="og:updated_time" content="2018-01-02T15:38:35.746Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android的线程池与队列"><meta name="twitter:description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.3",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!1,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!0,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="http://yoursite.com/2018/01/02/Android的线程池与队列/"><title>Android的线程池与队列 | 博格</title><script type="text/javascript" src="/js/src/love.js"></script></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">博格</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/Android的线程池与队列/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Joker Fu"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.gif"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="博格"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android的线程池与队列</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T22:37:22+08:00">2018-01-02</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 热度<span class="busuanzi-value" id="busuanzi_value_page_pv"></span></span><div class="post-wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">2,221字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">9分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：</p><ol><li>线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。</li><li>控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。</li><li>简单的线程管理，实现定时执行等功能。</li></ol><h4 id="一-ThreadPoolExecutor"><a href="#一-ThreadPoolExecutor" class="headerlink" title="一 ThreadPoolExecutor"></a>一 ThreadPoolExecutor</h4><p>1) <strong>ThreadPoolExecutor 构造器</strong><br></p><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用给定的参数和默认线程工厂、拒绝执行的Handler创建一个新的ThreadPoolExecutor </span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue)</span><br><span class="line">    </span><br><span class="line"><span class="comment">//使用给定的参数和拒绝执行的Handler创建一个新的ThreadPoolExecutor。</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory)</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用给定的参数和默认线程工厂创建一个新的ThreadPoolExecutor</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler <span class="keyword">handler</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用给定的参数创建一个新的ThreadPoolExecutor</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler <span class="keyword">handler</span>)</span><br></pre></td></tr></table></figure><p></p><p>2) <strong>ThreadPoolExecutor 构造器参数说明</strong></p><ul><li>corePoolSize 核心线程数（常驻线程数）<br>一直保持在线程池的线程数，空闲状态也不会退出，除非设置allowCoreThreadTimeOut为true</li><li>maximumPoolSize 最大线程数<br>线程池中允许存在的最大线程数</li><li>keepAliveTime 保持活跃时间<br>当线程数大于核心线程数时，这是超出空闲线程在终止之前等待新任务的最大时间。当allowCoreThreadTimeOut为true时，也适用与核心线程</li><li>unit 单位<br>keepAliveTime参数的时间单位</li><li>workQueue 任务队列<br>在执行任务之前用于保存任务的队列。 该队列将仅保存由（Runnable的execute）方法提交的任务。</li><li>threadFactory 线程工厂<br>executor创建新线程的时候使用</li><li>handler 拒绝执行的handler<br>当线程池无法执行新任务，导致执行被阻止时使用的处理程序，可能因为线程达到线程限制和队列容量</li></ul><p>3) <strong>ThreadPoolExecutor执行任务时大致规则</strong></p><ul><li>线程池中线程数小于核心线程数，会直接启动一个核心线程来执行新任务</li><li>线程池中线程数大于等于核心线程数， 将会将新任务存放到任务队列等待执行</li><li>线程池中线程数大于等于核心线程数，且任务队列已满，但线程池中线程数小于最大线程数，将会启动一个非核心线程来执行任务</li><li>线程池中线程数大于等于最大线程数，那么就会拒绝执行该任务，调用handler的rejectedException来通知调用者</li></ul><p>4) <strong>ThreadPoolExecutor在AsyncTask中的使用</strong><br></p><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> String <span class="class">LOG_TAG = "AsyncTask";</span></span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>CPU_COUNT = Runtime.getRuntime().availableProcessors();</span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>CORE_POO<span class="class">L_SIZE = CPU_COUNT + 1;</span></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>MAXIMUM_POO<span class="class">L_SIZE = CPU_COUNT * 2 + 1;</span></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>KEEP_A<span class="class">LIVE = 1;</span></span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> ThreadFactory sThreadFactory =<span class="built_in"> new </span>ThreadFactory() &#123;</span><br><span class="line">   <span class="keyword"> private</span><span class="keyword"> final</span> AtomicInteger mCount =<span class="built_in"> new </span>AtomicInteger(1);</span><br><span class="line"></span><br><span class="line">   <span class="keyword"> public</span> Thread newThread(Runnable r) &#123;</span><br><span class="line">       <span class="built_in"> return </span>new Thread(r, <span class="string">"AsyncTask #"</span> + mCount.getAndIncrement());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> BlockingQueue&lt;Runnable&gt; sPoolWorkQueue =</span><br><span class="line">       <span class="built_in"> new </span>LinkedBlockingQueue&lt;Runnable&gt;(128);</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * An &#123;@link Executor&#125; that can be used to<span class="built_in"> execute </span>tasks in parallel.</span><br><span class="line"> */</span><br><span class="line">public<span class="keyword"> static</span><span class="keyword"> final</span> Executor THREAD_POOL_EXECUTOR</span><br><span class="line">        =<span class="built_in"> new </span>ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,</span><br><span class="line">                TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);</span><br></pre></td></tr></table></figure><p></p><p>通过源码，我们可以看到AsyncTask的THREAD_POOL_EXECUTOR属性配置如下：</p><ul><li>核心线程数（CORE_POOL_SIZE）为CPU核心数+1</li><li>最大线程数（MAXIMUM_POOL_SIZE）为CPU核心数 * 2 + 1</li><li>非核心线程保持活跃时间为1，单位为秒</li><li>任务队列容量为128</li></ul><p>以上对ThreadPoolExecutor和AsyncTask中的ThreadPoolExecutor配置进行了介绍。在Android中通过对ThreadPoolExecutor的配置实现了四类不同功能特性的线程池，接下来我们就对Android中的这四类线程池进行一个简单介绍</p><h4 id="二-FixedThreadPool"><a href="#二-FixedThreadPool" class="headerlink" title="二 FixedThreadPool"></a>二 FixedThreadPool</h4><p>通过Executors.newFixedThreadPool创建一个线程池，它使用固定数量的线程操作了共享无界队列。在任何时候，大多数线程都是主动处理任务的。如果在所有线程处于活动状态时提交其他任务，则它们将在队列中等待，直到有线程空闲可用为止。如果任何线程在关闭前在执行过程中失败，如果需要执行后续任务，则新线程将取代它。线程池中线程会一致存在，直到线程池明确关闭（shutdown）。下面是它的实现，可以看到它只有不会被回收的核心线程，队列大小也没有限制。<br></p><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">FixedThreadPool</span>(int nThreads) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0</span>L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4 id="三-CachedThreadPool"><a href="#三-CachedThreadPool" class="headerlink" title="三 CachedThreadPool"></a>三 CachedThreadPool</h4><p>通过Executors.newCachedThreadPool创建一个线程池，根据需要创建新线程，但在可用线程时将重用以前构建的线程。这些池通常会提高执行许多短期异步任务的程序的性能。如果先前创建线程可用的话，调用将重用先前构建的线程。如果没有现有的线程可用，一个新线程将被创建并添加到池。未使用六十秒的线程被终止并从缓存中移除。因此，空闲时间足够长的池不会消耗任何系统资源。下面是它的实现，可以看到与ThreadPoolExecutor不同的是它没有核心线程，最大线程数为Integer.MAX_VALUE，且CachedThreadPool的任务队列是一个SynchronousQueue的空集合，这将导致任务会被立即执行，所以这类线程比较适合执行大量耗时较少的任务。<br></p><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">CachedThreadPool</span>() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                      <span class="number">60</span>L, TimeUnit.SECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> <span class="type">SynchronousQueue</span>&lt;Runnable&gt;());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><p></p><h4 id="四-ScheduledThreadPool"><a href="#四-ScheduledThreadPool" class="headerlink" title="四 ScheduledThreadPool"></a>四 ScheduledThreadPool</h4><p>通过Executors.newScheduledThreadPoo创建一个线程池，可以在给定延迟后调度命令运行，或定期执行命令。它有数量固定的核心线程，且有数量无限多的非核心线程，但是它的非核心线程超时时间是0s，所以非核心线程一旦空闲立马就会被回收。这类线程池适合用于执行定时任务和固定周期的重复任务。<br></p><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">ScheduledExecutorService <span class="title">newScheduledThreadPool</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledThreadPoolExecutor(corePoolSize);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</span><br><span class="line">          DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4 id="五-newSingleThreadScheduledExecutor"><a href="#五-newSingleThreadScheduledExecutor" class="headerlink" title="五 newSingleThreadScheduledExecutor"></a>五 newSingleThreadScheduledExecutor</h4><p>通过Executors.newSingleThreadScheduledExecutor创建一个单线程执行器，可以在给定延迟后调度命令运行，或定期执行命令。任务是按顺序执行的，在任何给定的时间内都不会有一个任务处于活动状态，让调用者可以忽略线程同步问题。<br></p><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ScheduledExecutorService <span class="keyword">new</span><span class="type">SingleThreadScheduledExecutor</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">DelegatedScheduledExecutorService</span></span><br><span class="line"><span class="type"></span>        (<span class="keyword">new</span> <span class="type">ScheduledThreadPoolExecutor</span>(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> ScheduledThreadPoolExecutor(int corePoolSize) &#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</span><br><span class="line">          DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</span><br><span class="line">          <span class="keyword">new</span> <span class="type">DelayedWorkQueue</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h4 id="六-线程池一般用法"><a href="#六-线程池一般用法" class="headerlink" title="六 线程池一般用法"></a>六 线程池一般用法</h4><ul><li>shutDown()，关闭线程池，需要执行完已提交的任务</li><li>shutDownNow()，关闭线程池，并尝试结束已提交的任务</li><li>allowCoreThreadTimeOut(boolen)，允许核心线程闲置超时回收</li><li>execute()，提交任务无返回值</li><li>submit()，提交任务有返回值</li></ul><p>除了上面4种线程池，还可以根据实际需求自定义线程池。</p><h4 id="七-自定义线程池"><a href="#七-自定义线程池" class="headerlink" title="七 自定义线程池"></a>七 自定义线程池</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ExecutorService mExecutor</span> = Executors.newFixedThreadPool(5);</span><br></pre></td></tr></table></figure><p>execute()方法，接收一个Runnable对象作为参数，异步执行。<br></p><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Runnable myRunnable = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"myRunnable"</span>, <span class="string">"run"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">mExecutor.execute(myRunnable);</span><br></pre></td></tr></table></figure><p></p><h4 id="八-队列简述"><a href="#八-队列简述" class="headerlink" title="八 队列简述"></a>八 队列简述</h4><p>Queue的成员函数</p><pre><code>add        增加一个元索                     如果队列已满，则抛出一个IIIegaISlabEepeplian异常
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android的线程池与队列">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/Android的线程池与队列/index.html">
+<meta property="og:site_name" content="博格">
+<meta property="og:description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-02T15:38:35.746Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android的线程池与队列">
+<meta name="twitter:description" content="Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：  线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。 控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。 简单的线程管理，实现定时执行等功能。  一 Thr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/Android的线程池与队列/"/>
+
+
+
+
+
+  <title>Android的线程池与队列 | 博格</title>
+  
+
+
+
+
+
+
+
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">博格</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/Android的线程池与队列/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joker Fu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博格">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android的线程池与队列</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T22:37:22+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 热度
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,221字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android中的线程池来源于Java中的Executor接口，真正的线程池实现为ThreadPoolExecutor，它提供参数来配置线程池。既然提到线程池，首先得了解线程池有什么有点，线程池的优点主要有以下3点：</p>
+<ol>
+<li>线程重用，通过重用线程池中线程避免反复创建和销毁县城带来的性能开销问题。</li>
+<li>控制并发数，避免大量线程同时工作抢占系统资源造成阻塞。</li>
+<li>简单的线程管理，实现定时执行等功能。</li>
+</ol>
+<h4 id="一-ThreadPoolExecutor"><a href="#一-ThreadPoolExecutor" class="headerlink" title="一 ThreadPoolExecutor"></a>一 ThreadPoolExecutor</h4><p>1) <strong>ThreadPoolExecutor 构造器</strong><br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用给定的参数和默认线程工厂、拒绝执行的Handler创建一个新的ThreadPoolExecutor </span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue)</span><br><span class="line">    </span><br><span class="line"><span class="comment">//使用给定的参数和拒绝执行的Handler创建一个新的ThreadPoolExecutor。</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory)</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用给定的参数和默认线程工厂创建一个新的ThreadPoolExecutor</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, RejectedExecutionHandler <span class="keyword">handler</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用给定的参数创建一个新的ThreadPoolExecutor</span></span><br><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler <span class="keyword">handler</span>)</span><br></pre></td></tr></table></figure></p>
+<p>2) <strong>ThreadPoolExecutor 构造器参数说明</strong></p>
+<ul>
+<li>corePoolSize 核心线程数（常驻线程数）<br>一直保持在线程池的线程数，空闲状态也不会退出，除非设置allowCoreThreadTimeOut为true</li>
+<li>maximumPoolSize 最大线程数<br>线程池中允许存在的最大线程数</li>
+<li>keepAliveTime 保持活跃时间<br>当线程数大于核心线程数时，这是超出空闲线程在终止之前等待新任务的最大时间。当allowCoreThreadTimeOut为true时，也适用与核心线程</li>
+<li>unit 单位<br>keepAliveTime参数的时间单位</li>
+<li>workQueue 任务队列<br>在执行任务之前用于保存任务的队列。 该队列将仅保存由（Runnable的execute）方法提交的任务。</li>
+<li>threadFactory 线程工厂<br>executor创建新线程的时候使用</li>
+<li>handler 拒绝执行的handler<br>当线程池无法执行新任务，导致执行被阻止时使用的处理程序，可能因为线程达到线程限制和队列容量</li>
+</ul>
+<p>3) <strong>ThreadPoolExecutor执行任务时大致规则</strong> </p>
+<ul>
+<li>线程池中线程数小于核心线程数，会直接启动一个核心线程来执行新任务</li>
+<li>线程池中线程数大于等于核心线程数， 将会将新任务存放到任务队列等待执行</li>
+<li>线程池中线程数大于等于核心线程数，且任务队列已满，但线程池中线程数小于最大线程数，将会启动一个非核心线程来执行任务</li>
+<li>线程池中线程数大于等于最大线程数，那么就会拒绝执行该任务，调用handler的rejectedException来通知调用者</li>
+</ul>
+<p>4) <strong>ThreadPoolExecutor在AsyncTask中的使用</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> String <span class="class">LOG_TAG = "AsyncTask";</span></span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>CPU_COUNT = Runtime.getRuntime().availableProcessors();</span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>CORE_POO<span class="class">L_SIZE = CPU_COUNT + 1;</span></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>MAXIMUM_POO<span class="class">L_SIZE = CPU_COUNT * 2 + 1;</span></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span><span class="built_in"> int </span>KEEP_A<span class="class">LIVE = 1;</span></span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> ThreadFactory sThreadFactory =<span class="built_in"> new </span>ThreadFactory() &#123;</span><br><span class="line">   <span class="keyword"> private</span><span class="keyword"> final</span> AtomicInteger mCount =<span class="built_in"> new </span>AtomicInteger(1);</span><br><span class="line"></span><br><span class="line">   <span class="keyword"> public</span> Thread newThread(Runnable r) &#123;</span><br><span class="line">       <span class="built_in"> return </span>new Thread(r, <span class="string">"AsyncTask #"</span> + mCount.getAndIncrement());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">private<span class="keyword"> static</span><span class="keyword"> final</span> BlockingQueue&lt;Runnable&gt; sPoolWorkQueue =</span><br><span class="line">       <span class="built_in"> new </span>LinkedBlockingQueue&lt;Runnable&gt;(128);</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * An &#123;@link Executor&#125; that can be used to<span class="built_in"> execute </span>tasks in parallel.</span><br><span class="line"> */</span><br><span class="line">public<span class="keyword"> static</span><span class="keyword"> final</span> Executor THREAD_POOL_EXECUTOR</span><br><span class="line">        =<span class="built_in"> new </span>ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,</span><br><span class="line">                TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);</span><br></pre></td></tr></table></figure></p>
+<p>通过源码，我们可以看到AsyncTask的THREAD_POOL_EXECUTOR属性配置如下：</p>
+<ul>
+<li>核心线程数（CORE_POOL_SIZE）为CPU核心数+1</li>
+<li>最大线程数（MAXIMUM_POOL_SIZE）为CPU核心数 * 2 + 1</li>
+<li>非核心线程保持活跃时间为1，单位为秒</li>
+<li>任务队列容量为128</li>
+</ul>
+<p>以上对ThreadPoolExecutor和AsyncTask中的ThreadPoolExecutor配置进行了介绍。在Android中通过对ThreadPoolExecutor的配置实现了四类不同功能特性的线程池，接下来我们就对Android中的这四类线程池进行一个简单介绍</p>
+<h4 id="二-FixedThreadPool"><a href="#二-FixedThreadPool" class="headerlink" title="二 FixedThreadPool"></a>二 FixedThreadPool</h4><p>通过Executors.newFixedThreadPool创建一个线程池，它使用固定数量的线程操作了共享无界队列。在任何时候，大多数线程都是主动处理任务的。如果在所有线程处于活动状态时提交其他任务，则它们将在队列中等待，直到有线程空闲可用为止。如果任何线程在关闭前在执行过程中失败，如果需要执行后续任务，则新线程将取代它。线程池中线程会一致存在，直到线程池明确关闭（shutdown）。下面是它的实现，可以看到它只有不会被回收的核心线程，队列大小也没有限制。<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">FixedThreadPool</span>(int nThreads) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(nThreads, nThreads,</span><br><span class="line">                                  <span class="number">0</span>L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="三-CachedThreadPool"><a href="#三-CachedThreadPool" class="headerlink" title="三 CachedThreadPool"></a>三 CachedThreadPool</h4><p>通过Executors.newCachedThreadPool创建一个线程池，根据需要创建新线程，但在可用线程时将重用以前构建的线程。这些池通常会提高执行许多短期异步任务的程序的性能。如果先前创建线程可用的话，调用将重用先前构建的线程。如果没有现有的线程可用，一个新线程将被创建并添加到池。未使用六十秒的线程被终止并从缓存中移除。因此，空闲时间足够长的池不会消耗任何系统资源。下面是它的实现，可以看到与ThreadPoolExecutor不同的是它没有核心线程，最大线程数为Integer.MAX_VALUE，且CachedThreadPool的任务队列是一个SynchronousQueue的空集合，这将导致任务会被立即执行，所以这类线程比较适合执行大量耗时较少的任务。<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">CachedThreadPool</span>() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                      <span class="number">60</span>L, TimeUnit.SECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> <span class="type">SynchronousQueue</span>&lt;Runnable&gt;());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="四-ScheduledThreadPool"><a href="#四-ScheduledThreadPool" class="headerlink" title="四 ScheduledThreadPool"></a>四 ScheduledThreadPool</h4><p>通过Executors.newScheduledThreadPoo创建一个线程池，可以在给定延迟后调度命令运行，或定期执行命令。它有数量固定的核心线程，且有数量无限多的非核心线程，但是它的非核心线程超时时间是0s，所以非核心线程一旦空闲立马就会被回收。这类线程池适合用于执行定时任务和固定周期的重复任务。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">ScheduledExecutorService <span class="title">newScheduledThreadPool</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledThreadPoolExecutor(corePoolSize);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</span><br><span class="line">          DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="五-newSingleThreadScheduledExecutor"><a href="#五-newSingleThreadScheduledExecutor" class="headerlink" title="五 newSingleThreadScheduledExecutor"></a>五 newSingleThreadScheduledExecutor</h4><p>通过Executors.newSingleThreadScheduledExecutor创建一个单线程执行器，可以在给定延迟后调度命令运行，或定期执行命令。任务是按顺序执行的，在任何给定的时间内都不会有一个任务处于活动状态，让调用者可以忽略线程同步问题。<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ScheduledExecutorService <span class="keyword">new</span><span class="type">SingleThreadScheduledExecutor</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">DelegatedScheduledExecutorService</span></span><br><span class="line"><span class="type"></span>        (<span class="keyword">new</span> <span class="type">ScheduledThreadPoolExecutor</span>(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> ScheduledThreadPoolExecutor(int corePoolSize) &#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</span><br><span class="line">          DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</span><br><span class="line">          <span class="keyword">new</span> <span class="type">DelayedWorkQueue</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="六-线程池一般用法"><a href="#六-线程池一般用法" class="headerlink" title="六 线程池一般用法"></a>六 线程池一般用法</h4><ul>
+<li>shutDown()，关闭线程池，需要执行完已提交的任务</li>
+<li>shutDownNow()，关闭线程池，并尝试结束已提交的任务</li>
+<li>allowCoreThreadTimeOut(boolen)，允许核心线程闲置超时回收</li>
+<li>execute()，提交任务无返回值</li>
+<li>submit()，提交任务有返回值</li>
+</ul>
+<p>除了上面4种线程池，还可以根据实际需求自定义线程池。</p>
+<h4 id="七-自定义线程池"><a href="#七-自定义线程池" class="headerlink" title="七 自定义线程池"></a>七 自定义线程池</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ExecutorService mExecutor</span> = Executors.newFixedThreadPool(5);</span><br></pre></td></tr></table></figure>
+<p>execute()方法，接收一个Runnable对象作为参数，异步执行。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Runnable myRunnable = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"myRunnable"</span>, <span class="string">"run"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">mExecutor.execute(myRunnable);</span><br></pre></td></tr></table></figure></p>
+<h4 id="八-队列简述"><a href="#八-队列简述" class="headerlink" title="八 队列简述"></a>八 队列简述</h4><p>Queue的成员函数</p>
+<pre><code>add        增加一个元索                     如果队列已满，则抛出一个IIIegaISlabEepeplian异常
 remove   移除并返回队列头部的元素    如果队列为空，则抛出一个NoSuchElementException异常
 element  返回队列头部的元素             如果队列为空，则抛出一个NoSuchElementException异常
 offer       添加一个元素并返回true       如果队列已满，则返回false
@@ -6,4 +480,794 @@ poll         移除并返问队列头部的元素    如果队列为空，则返
 peek       返回队列头部的元素             如果队列为空，则返回null
 put         添加一个元素                      如果队列满，则阻塞
 take        移除并返回队列头部的元素     如果队列为空，则阻塞
-</code></pre><p>remove、element、offer 、poll、peek 其实是属于Queue接口。</p><p>LinkedBlockingQueue是一个链表实现的阻塞队列，在链表一头加入元素，如果队列满，就会阻塞，另一头取出元素，如果队列为空，就会阻塞。</p><p>LinkedBlockingQueue内部使用ReentrantLock实现插入锁(putLock)和取出锁(takeLock)。putLock上的条件变量是notFull，即可以用notFull唤醒阻塞在putLock上的线程。takeLock上的条件变量是notEmtpy，即可用notEmpty唤醒阻塞在takeLock上的线程。</p><p>知道了LinkedBlockingQueue，再来理解ArrayBlockingQueue就比较好理解了。类似LinkList和ArrayList的区别。如果知道队列的大小，那么使用ArrayBlockIngQueue就比较合适了，因为它使用循环数组实现，但是如果不知道队列未来的大小，那么使用ArrayBlockingQueue就必然会导致数组的来回复制，降低效率。</p></div><div><div><div style="text-align:center;color:#ccc;font-size:14px"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div></div></div><div><div class="my_post_copyright"><script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script><script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><p><span>本文标题:</span><a href="/2018/01/02/Android的线程池与队列/">Android的线程池与队列</a></p><p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p><p><span>发布时间:</span>2018年01月02日 - 22:01</p><p><span>最后更新:</span>2018年01月02日 - 23:01</p><p><span>原始链接:</span><a href="/2018/01/02/Android的线程池与队列/" title="Android的线程池与队列">http://yoursite.com/2018/01/02/Android的线程池与队列/</a><span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/02/Android的线程池与队列/" aria-label="复制成功！"></i></span></p><p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p></div><script>var clipboard=new Clipboard(".fa-clipboard");$(".fa-clipboard").click(function(){clipboard.on("success",function(){swal({title:"",text:"复制成功",icon:"success",showConfirmButton:!0})})})</script></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/01/02/Gradle-从入门到实战-学习笔记/" rel="next" title="Gradle 从入门到实战 学习笔记"><i class="fa fa-chevron-left"></i> Gradle 从入门到实战 学习笔记</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/01/02/Android-TabLayout系列之属性/" rel="prev" title="Android TabLayout系列之属性">Android TabLayout系列之属性<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="Joker Fu"><p class="site-author-name" itemprop="name">Joker Fu</p><p class="site-description motion-element" itemprop="description">博格，水滴石穿</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">25</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">12</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">12</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-ThreadPoolExecutor"><span class="nav-number">1.</span> <span class="nav-text">一 ThreadPoolExecutor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-FixedThreadPool"><span class="nav-number">2.</span> <span class="nav-text">二 FixedThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-CachedThreadPool"><span class="nav-number">3.</span> <span class="nav-text">三 CachedThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-ScheduledThreadPool"><span class="nav-number">4.</span> <span class="nav-text">四 ScheduledThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五-newSingleThreadScheduledExecutor"><span class="nav-number">5.</span> <span class="nav-text">五 newSingleThreadScheduledExecutor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六-线程池一般用法"><span class="nav-number">6.</span> <span class="nav-text">六 线程池一般用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七-自定义线程池"><span class="nav-number">7.</span> <span class="nav-text">七 自定义线程池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#八-队列简述"><span class="nav-number">8.</span> <span class="nav-text">八 队列简述</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">Joker Fu</span></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-users"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人</span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><script type="text/javascript">!function(e,t){var c,n=e.getElementsByTagName("script")[0];"function"!=typeof LivereTower&&((c=e.createElement("script")).src="https://cdn-city.livere.com/js/embed.dist.js",c.async=!0,n.parentNode.insertBefore(c,n))}(document)</script><script type="text/javascript">var isfetched=!1,isXml=!0,search_path="search.xml";0===search_path.length?search_path="search.xml":/json$/i.test(search_path)&&(isXml=!1);var path="/"+search_path,onPopupClose=function(t){$(".popup").hide(),$("#local-search-input").val(""),$(".search-result-list").remove(),$("#no-result").remove(),$(".local-search-pop-overlay").remove(),$("body").css("overflow","")};function proceedsearch(){$("body").append('<div class="search-popup-overlay local-search-pop-overlay"></div>').css("overflow","hidden"),$(".search-popup-overlay").click(onPopupClose),$(".popup").toggle();var t=$("#local-search-input");t.attr("autocapitalize","none"),t.attr("autocorrect","off"),t.focus()}var searchFunc=function(t,e,o){"use strict";$("body").append('<div class="search-popup-overlay local-search-pop-overlay"><div id="search-loading-icon"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div></div>').css("overflow","hidden"),$("#search-loading-icon").css("margin","20% auto 0 auto").css("text-align","center"),$.ajax({url:t,dataType:isXml?"xml":"json",async:!0,success:function(t){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var n=isXml?$("entry",t).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get():t,r=document.getElementById(e),s=document.getElementById(o),a=function(){var t=r.value.trim().toLowerCase(),e=t.split(/[\s\-]+/);e.length>1&&e.push(t);var o=[];if(t.length>0&&n.forEach(function(n){var r=!1,s=0,a=0,i=n.title.trim(),c=i.toLowerCase(),l=n.content.trim().replace(/<[^>]+>/g,""),h=l.toLowerCase(),p=decodeURIComponent(n.url),u=[],f=[];if(""!=i&&(e.forEach(function(t){function e(t,e,o){var n=t.length;if(0===n)return[];var r=0,s=[],a=[];for(o||(e=e.toLowerCase(),t=t.toLowerCase());(s=e.indexOf(t,r))>-1;)a.push({position:s,word:t}),r=s+n;return a}u=u.concat(e(t,c,!1)),f=f.concat(e(t,h,!1))}),(u.length>0||f.length>0)&&(r=!0,s=u.length+f.length)),r){[u,f].forEach(function(t){t.sort(function(t,e){return e.position!==t.position?e.position-t.position:t.word.length-e.word.length})});function d(e,o,n,r){for(var s=r[r.length-1],i=s.position,c=s.word,l=[],h=0;i+c.length<=n&&0!=r.length;){c===t&&h++,l.push({position:i,length:c.length});var p=i+c.length;for(r.pop();0!=r.length&&(i=(s=r[r.length-1]).position,c=s.word,p>i);)r.pop()}return a+=h,{hits:l,start:o,end:n,searchTextCount:h}}var g=[];0!=u.length&&g.push(d(0,0,i.length,u));for(var v=[];0!=f.length;){var $=f[f.length-1],C=$.position,m=$.word,x=C-20,w=C+80;x<0&&(x=0),w<C+m.length&&(w=C+m.length),w>l.length&&(w=l.length),v.push(d(0,x,w,f))}v.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hits.length!==e.hits.length?e.hits.length-t.hits.length:t.start-e.start});var y=parseInt("1");y>=0&&(v=v.slice(0,y));function T(t,e){var o="",n=e.start;return e.hits.forEach(function(e){o+=t.substring(n,e.position);var r=e.position+e.length;o+='<b class="search-keyword">'+t.substring(e.position,r)+"</b>",n=r}),o+=t.substring(n,e.end)}var b="";0!=g.length?b+="<li><a href='"+p+"' class='search-result-title'>"+T(i,g[0])+"</a>":b+="<li><a href='"+p+"' class='search-result-title'>"+i+"</a>",v.forEach(function(t){b+="<a href='"+p+'\'><p class="search-result">'+T(l,t)+"...</p></a>"}),b+="</li>",o.push({item:b,searchTextCount:a,hitCount:s,id:o.length})}}),1===e.length&&""===e[0])s.innerHTML='<div id="no-result"><i class="fa fa-search fa-5x" /></div>';else if(0===o.length)s.innerHTML='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>';else{o.sort(function(t,e){return t.searchTextCount!==e.searchTextCount?e.searchTextCount-t.searchTextCount:t.hitCount!==e.hitCount?e.hitCount-t.hitCount:e.id-t.id});var a='<ul class="search-result-list">';o.forEach(function(t){a+=t.item}),a+="</ul>",s.innerHTML=a}};r.addEventListener("input",a),$(".local-search-pop-overlay").remove(),$("body").css("overflow",""),proceedsearch()}})};$(".popup-trigger").click(function(t){t.stopPropagation(),!1===isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(onPopupClose),$(".popup").click(function(t){t.stopPropagation()}),$(document).on("keyup",function(t){27===t.which&&$(".search-popup").is(":visible")&&onPopupClose()})</script></body></html>
+</code></pre><p>remove、element、offer 、poll、peek 其实是属于Queue接口。</p>
+<p>LinkedBlockingQueue是一个链表实现的阻塞队列，在链表一头加入元素，如果队列满，就会阻塞，另一头取出元素，如果队列为空，就会阻塞。</p>
+<p>LinkedBlockingQueue内部使用ReentrantLock实现插入锁(putLock)和取出锁(takeLock)。putLock上的条件变量是notFull，即可以用notFull唤醒阻塞在putLock上的线程。takeLock上的条件变量是notEmtpy，即可用notEmpty唤醒阻塞在takeLock上的线程。</p>
+<p>知道了LinkedBlockingQueue，再来理解ArrayBlockingQueue就比较好理解了。类似LinkList和ArrayList的区别。如果知道队列的大小，那么使用ArrayBlockIngQueue就比较合适了，因为它使用循环数组实现，但是如果不知道队列未来的大小，那么使用ArrayBlockingQueue就必然会导致数组的来回复制，降低效率。</p>
+
+      
+    </div>
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;"><i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i>本文结束<i class="fa fa-paw"></i>感谢阅读<i class="fa fa-paw"></i><i class="fa fa-paw"></i><i class="fa fa-paw"></i></div>
+    
+</div>
+
+		
+	</div>
+
+	<div>
+		
+			
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/01/02/Android的线程池与队列/">Android的线程池与队列</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Joker Fu 的个人博客">Joker Fu</a></p>
+  <p><span>发布时间:</span>2018年01月02日 - 22:01</p>
+  <p><span>最后更新:</span>2018年01月02日 - 23:01</p>
+  <p><span>原始链接:</span><a href="/2018/01/02/Android的线程池与队列/" title="Android的线程池与队列">http://yoursite.com/2018/01/02/Android的线程池与队列/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/01/02/Android的线程池与队列/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性noderivatives 4国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+		
+	</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/Gradle-从入门到实战-学习笔记/" rel="next" title="Gradle 从入门到实战 学习笔记">
+                <i class="fa fa-chevron-left"></i> Gradle 从入门到实战 学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/02/Android-TabLayout系列之属性/" rel="prev" title="Android TabLayout系列之属性">
+                Android TabLayout系列之属性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY5MS85MjUy"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Joker Fu" />
+            
+              <p class="site-author-name" itemprop="name">Joker Fu</p>
+              <p class="site-description motion-element" itemprop="description">博格，水滴石穿</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一-ThreadPoolExecutor"><span class="nav-number">1.</span> <span class="nav-text">一 ThreadPoolExecutor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二-FixedThreadPool"><span class="nav-number">2.</span> <span class="nav-text">二 FixedThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三-CachedThreadPool"><span class="nav-number">3.</span> <span class="nav-text">三 CachedThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四-ScheduledThreadPool"><span class="nav-number">4.</span> <span class="nav-text">四 ScheduledThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五-newSingleThreadScheduledExecutor"><span class="nav-number">5.</span> <span class="nav-text">五 newSingleThreadScheduledExecutor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六-线程池一般用法"><span class="nav-number">6.</span> <span class="nav-text">六 线程池一般用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七-自定义线程池"><span class="nav-number">7.</span> <span class="nav-text">七 自定义线程池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#八-队列简述"><span class="nav-number">8.</span> <span class="nav-text">八 队列简述</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joker Fu</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-users"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
